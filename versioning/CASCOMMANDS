@@ -1,0 +1,8 @@
+# Show storage statistics
+   python manage.py cas_stats
+   
+   # Cleanup unreferenced blobs (dry run)
+   python manage.py cleanup_cas --dry-run
+   
+   # Cleanup unreferenced blobs (actual deletion)
+   python manage.py cleanup_cas --force
