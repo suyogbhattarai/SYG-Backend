@@ -1,9 +1,7 @@
 """
-=============================================================================
-FILE 1: versions/tasks.py
-=============================================================================
+versions/tasks.py
 Celery tasks for version processing with file-based manifest storage
-FIXED: Proper hash saving and snapshot creation
+COMPLETE FIXED VERSION - Solves hash, duplicate detection, file size issues
 """
 
 import os
@@ -41,8 +39,22 @@ def compute_file_hash(file_path):
     return sha256.hexdigest()
 
 def compute_manifest_hash(manifest):
-    """Compute hash of manifest"""
-    manifest_str = json.dumps(manifest, sort_keys=True)
+    """Compute hash of manifest for duplicate detection"""
+    files = manifest.get('files', [])
+    file_hashes = []
+    
+    for f in files:
+        file_hashes.append({
+            'path': f.get('path'),
+            'hash': f.get('hash'),
+            'size': f.get('size')
+        })
+    
+    # Sort by path for consistency
+    file_hashes.sort(key=lambda x: x['path'])
+    
+    # Compute hash
+    manifest_str = json.dumps(file_hashes, sort_keys=True)
     return hashlib.sha256(manifest_str.encode()).hexdigest()
 
 def update_push_progress(push: PendingPush, status: str, progress: int, message: str = None):
@@ -52,7 +64,7 @@ def update_push_progress(push: PendingPush, status: str, progress: int, message:
     if message is not None:
         push.message = message
     push.save()
-    logger.info(f"... Push {push.id} status={status}, progress={progress}%, message={message}")
+    logger.info(f"Push {push.id}: status={status}, progress={progress}%, message={message}")
 
 def should_ignore_file(rel_path, ignore_patterns):
     """Check if file should be ignored based on patterns"""
@@ -160,7 +172,6 @@ def create_snapshot_zip(master_dir, version_obj):
     """
     import tempfile
     
-    # Create temporary ZIP file
     temp_zip = tempfile.NamedTemporaryFile(delete=False, suffix='.zip', prefix='snapshot_')
     temp_zip.close()
     
@@ -184,11 +195,7 @@ def create_snapshot_zip(master_dir, version_obj):
 @shared_task(bind=True)
 def process_pending_push_new(self, push_id):
     """
-    Process a pending push
-    - Handle cancellation checks
-    - Copy files to master directory
-    - Create manifest OR snapshot based on version number
-    - Save version
+    Process a pending push with proper hash saving and duplicate detection
     """
     try:
         push = PendingPush.objects.select_related('project', 'created_by', 'version').get(id=push_id)
@@ -335,7 +342,7 @@ def process_pending_push_new(self, push_id):
 
         update_push_progress(push, 'processing', 65, f"Creating version {new_version_number} - {'Snapshot' if is_snapshot else 'CAS'} storage")
 
-        # Create manifest for duplicate detection (always needed)
+        # ALWAYS create manifest for duplicate detection
         update_push_progress(push, 'processing', 70, "Creating manifest for duplicate detection...")
         manifest, total_size, cas_count, inline_count = create_cas_manifest(file_list, master_dir)
         manifest_hash = compute_manifest_hash(manifest)
@@ -346,25 +353,28 @@ def process_pending_push_new(self, push_id):
             project=project, 
             hash=manifest_hash, 
             status='completed'
-        ).first()
+        ).exclude(id=version_obj.id if version_obj else None).first()
         
         if existing_version:
+            logger.info(f"Duplicate detected! Mapping to existing version {existing_version.id}")
             previous_placeholder = version_obj
             push.version = existing_version
             push.mark_completed()
             existing_version_number = existing_version.get_version_number()
-            update_push_progress(push, 'done', 100, f"No changes detected; mapped to existing version v{existing_version_number}.")
+            update_push_progress(push, 'done', 100, f"Identified same files and mapping to previous version v{existing_version_number}")
             if previous_placeholder and previous_placeholder.id != existing_version.id:
                 try:
                     previous_placeholder.delete()
-                except Exception:
-                    pass
+                    logger.info(f"Deleted placeholder version {previous_placeholder.id}")
+                except Exception as e:
+                    logger.error(f"Error deleting placeholder: {e}")
             return f"No changes detected - mapped to v{existing_version_number}"
 
-        # Update version object with basic info
+        # CRITICAL FIX: Update version object with hash and basic info
         version_obj.is_snapshot = is_snapshot
-        version_obj.hash = manifest_hash  # CRITICAL: Save hash here!
+        version_obj.hash = manifest_hash  # SAVE THE HASH!
         version_obj.file_count = len(file_list)
+        version_obj.file_size = total_size  # SAVE FILE SIZE!
         version_obj.created_at = timezone.now()
         version_obj.created_by = creator
 
@@ -380,12 +390,13 @@ def process_pending_push_new(self, push_id):
                     version_obj.file.save(f'snapshot.zip', File(f), save=False)
                 
                 version_obj.file_size = zip_size
-                version_obj.manifest_file_path = None  # No manifest for snapshots
+                version_obj.manifest_file_path = None
+                version_obj.save()  # Save all fields including hash and file_size
                 
                 # Clean up temp file
                 os.remove(temp_zip_path)
                 
-                update_push_progress(push, 'processing', 90, f"Snapshot ZIP created ({round(zip_size / 1024 / 1024, 2)} MB)")
+                update_push_progress(push, 'processing', 90, f"Snapshot v{new_version_number} created ({round(zip_size / 1024 / 1024, 2)} MB)")
                 
             except Exception as e:
                 logger.error(f"Error creating snapshot: {e}")
@@ -393,8 +404,8 @@ def process_pending_push_new(self, push_id):
         else:
             # Save CAS manifest to file
             update_push_progress(push, 'processing', 80, "Saving CAS manifest...")
-            version_obj.file = None  # No ZIP file for CAS
-            version_obj.file_size = total_size
+            version_obj.file = None
+            version_obj.save()  # Save first with hash and file_size
             version_obj.save_manifest_to_file(manifest)
 
         # Mark version as completed
@@ -411,6 +422,7 @@ def process_pending_push_new(self, push_id):
         update_push_progress(push, 'done', 100, message)
         push.mark_completed()
 
+        logger.info(f"✓ Version v{new_version_number} completed successfully with hash {manifest_hash[:16]}...")
         return f"Version v{new_version_number} created by {creator.username}"
 
     except PendingPush.DoesNotExist:
@@ -421,7 +433,7 @@ def process_pending_push_new(self, push_id):
             push.mark_failed(error_message=str(e))
             if push.version:
                 try:
-                    push.version.delete()
+                    push.version.mark_failed()
                 except Exception:
                     pass
         except Exception:

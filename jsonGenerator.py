@@ -65,7 +65,7 @@ def generate_version_json(root_folder, project_name, commit_message="First versi
 # Example usage for your Project_1
 if __name__ == "__main__":
     # Your project folder from the screenshot
-    project_folder = r"C:\Users\acer\Documents\Image-Line\FL Studio\Projects\Project_1"
+    project_folder = r"C:\Users\acer\Documents\Image-Line\FL Studio\Projects\anawashyak production"
     
     # Generate the JSON
     payload = generate_version_json(
