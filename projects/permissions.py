@@ -58,7 +58,7 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         # Read permissions are allowed for any member
         if request.method in permissions.SAFE_METHODS:
-            if hasattr(obj, 'user_can_view'):
+            if hasattr(obj, 'user_can_view'):   
                 return obj.user_can_view(request.user)
             elif hasattr(obj, 'project'):
                 return obj.project.user_can_view(request.user)

@@ -1,6 +1,7 @@
 """
 versions/urls.py
-URL patterns for versions app with CAS support and download management
+FIXED: Proper URL ordering to prevent pattern conflicts
+Specific patterns MUST come before generic catch-all patterns
 """
 
 from django.urls import path
@@ -16,27 +17,69 @@ from .views import (
     ApprovePushView,
     RejectPushView,
     CancelPushView,
+    SimpleTestView
 )
 
 app_name = 'versions'
 
 urlpatterns = [
-    # Version endpoints
-    path('projects/<int:project_id>/versions/', ProjectVersionsView.as_view(), name='project-versions'),
-    path('<int:version_id>/', VersionDetailView.as_view(), name='detail'),
+    # ========================================================================
+    # IMPORTANT: Specific patterns MUST come before generic catch-all patterns
+    # Django matches URLs from top to bottom and stops at first match
+    # ========================================================================
+    
+    # ========================================================================
+    # TEST ENDPOINT (must be first - before any catch-all patterns)
+    # ========================================================================
+    path('simple-test/', SimpleTestView.as_view(), name='simple-test'),
+    
+    # ========================================================================
+    # VERSION ENDPOINTS - Specific patterns first
+    # ========================================================================
+    
+    # Upload/create new version (POST)
     path('upload/', VersionUploadView.as_view(), name='upload'),
     
-    # Version file list
-    path('<int:version_id>/files/', VersionFileListView.as_view(), name='file-list'),
+    # List versions for a project (GET)
+    path('projects/<str:project_uid>/versions/', ProjectVersionsView.as_view(), name='project-versions'),
     
-    # Download management (new workflow)
-    path('<int:version_id>/request-download/', RequestVersionDownloadView.as_view(), name='request-download'),
-    path('download/<int:download_id>/status/', DownloadRequestStatusView.as_view(), name='download-status'),
-    path('download/<int:download_id>/', VersionDownloadView.as_view(), name='download-file'),
+    # ========================================================================
+    # DOWNLOAD ENDPOINTS - Specific patterns
+    # ========================================================================
     
-    # Push management
-    path('push/<int:push_id>/status/', PushStatusView.as_view(), name='push-status'),
-    path('push/<int:push_id>/approve/', ApprovePushView.as_view(), name='push-approve'),
-    path('push/<int:push_id>/reject/', RejectPushView.as_view(), name='push-reject'),
-    path('push/<int:push_id>/cancel/', CancelPushView.as_view(), name='push-cancel'),
+    # Check download status (GET)
+    path('downloads/<str:download_uid>/status/', DownloadRequestStatusView.as_view(), name='download-status'),
+    
+    # Download ZIP file (GET)
+    path('downloads/<str:download_uid>/file/', VersionDownloadView.as_view(), name='download-file'),
+    
+    # ========================================================================
+    # PUSH MANAGEMENT ENDPOINTS - Specific patterns
+    # ========================================================================
+    
+    # Get push status (GET)
+    path('pushes/<str:push_uid>/', PushStatusView.as_view(), name='push-status'),
+    
+    # Approve push (POST)
+    path('pushes/<str:push_uid>/approve/', ApprovePushView.as_view(), name='push-approve'),
+    
+    # Reject push (POST)
+    path('pushes/<str:push_uid>/reject/', RejectPushView.as_view(), name='push-reject'),
+    
+    # Cancel push (POST)
+    path('pushes/<str:push_uid>/cancel/', CancelPushView.as_view(), name='push-cancel'),
+    
+    # ========================================================================
+    # VERSION ENDPOINTS - Generic patterns (MUST BE LAST)
+    # ========================================================================
+    
+    # Get file list for a version (GET) - more specific than detail
+    path('<str:version_uid>/files/', VersionFileListView.as_view(), name='file-list'),
+    
+    # Request download ZIP creation (POST) - more specific than detail
+    path('<str:version_uid>/request-download/', RequestVersionDownloadView.as_view(), name='request-download'),
+    
+    # Version detail (GET, DELETE) - MUST BE LAST - catches any remaining UIDs
+    # This is a catch-all pattern and will match ANY string
+    path('<str:version_uid>/', VersionDetailView.as_view(), name='detail'),
 ]

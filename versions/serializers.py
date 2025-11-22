@@ -1,9 +1,6 @@
 """
-=============================================================================
-FILE 3: versions/serializers.py
-=============================================================================
-Serializers for version control with file-based manifest storage
-Updated to properly display snapshot vs CAS information
+versions/serializers.py
+FIXED: UUID support and detailed change tracking in responses
 """
 
 from rest_framework import serializers
@@ -25,43 +22,59 @@ class FileBlobSerializer(serializers.ModelSerializer):
 
 
 class VersionSerializer(serializers.ModelSerializer):
-    """Version with creator information and storage details"""
-    version_number = serializers.SerializerMethodField()
+    """Version with detailed change information"""
+    uid = serializers.CharField(read_only=True)
+    version_number = serializers.IntegerField(read_only=True)
     file_size_mb = serializers.SerializerMethodField()
     file_url = serializers.SerializerMethodField()
     storage_type = serializers.SerializerMethodField()
     project_name = serializers.CharField(source='project.name', read_only=True)
+    project_uid = serializers.CharField(source='project.uid', read_only=True)
     created_by_username = serializers.CharField(source='created_by.username', read_only=True)
     manifest_summary = serializers.SerializerMethodField()
     is_ready = serializers.SerializerMethodField()
     status_display = serializers.CharField(source='get_status_display', read_only=True)
     
+    # Detailed change tracking
+    change_summary = serializers.SerializerMethodField()
+    size_change_mb = serializers.SerializerMethodField()
+    previous_version_number = serializers.SerializerMethodField()
+    
     class Meta:
         model = Version
         fields = [
-            'id', 'project', 'project_name',
+            'uid', 'id', 'project', 'project_name', 'project_uid',
             'version_number', 'commit_message',
             'status', 'status_display', 'is_ready',
             'is_snapshot', 'storage_type',
             'file', 'file_url', 'file_size', 'file_size_mb', 'file_count',
             'manifest_summary',
             'hash', 'created_at', 'completed_at',
-            'created_by', 'created_by_username'
+            'created_by', 'created_by_username',
+            # Change tracking
+            'files_added', 'files_modified', 'files_deleted', 
+            'size_change', 'size_change_mb',
+            'previous_version', 'previous_version_number',
+            'change_summary'
         ]
-        read_only_fields = ['created_at', 'completed_at', 'hash', 'created_by', 'is_snapshot', 'status']
-    
-    def get_version_number(self, obj):
-        """Get version number for completed versions only"""
-        if obj.status == 'completed':
-            return obj.get_version_number()
-        return None
+        read_only_fields = [
+            'uid', 'created_at', 'completed_at', 'hash', 'created_by', 
+            'is_snapshot', 'status', 'files_added', 'files_modified', 
+            'files_deleted', 'size_change', 'previous_version', 'version_number'
+        ]
     
     def get_file_size_mb(self, obj):
-        """Get file size in MB"""
         return obj.get_file_size_mb()
     
+    def get_size_change_mb(self, obj):
+        return obj.get_size_change_mb()
+    
+    def get_previous_version_number(self, obj):
+        if obj.previous_version and obj.previous_version.version_number:
+            return obj.previous_version.version_number
+        return None
+    
     def get_file_url(self, obj):
-        """Get file URL for snapshot versions"""
         if obj.file and obj.is_snapshot and obj.status == 'completed':
             request = self.context.get('request')
             if request:
@@ -70,98 +83,143 @@ class VersionSerializer(serializers.ModelSerializer):
         return None
     
     def get_storage_type(self, obj):
-        """Get storage type for display"""
         return obj.get_storage_type()
     
     def get_is_ready(self, obj):
-        """Check if version is ready for use"""
         return obj.is_ready()
     
     def get_manifest_summary(self, obj):
-        """Get summary of manifest WITHOUT loading entire file"""
         if obj.is_snapshot:
             return {
                 'type': 'snapshot',
-                'message': 'Full ZIP snapshot - no manifest'
+                'message': 'Full ZIP snapshot'
             }
         
-        # Load manifest summary efficiently for CAS versions
-        return obj.get_manifest_summary()
+        manifest = obj.load_manifest_from_file()
+        if not manifest:
+            return {
+                'type': 'cas',
+                'message': 'Manifest not available'
+            }
+        
+        files = manifest.get('files', [])
+        cas_files = [f for f in files if f.get('storage') == 'cas']
+        inline_files = [f for f in files if f.get('storage') == 'inline']
+        
+        return {
+            'type': 'cas',
+            'total_files': len(files),
+            'cas_files': len(cas_files),
+            'inline_files': len(inline_files),
+            'cas_threshold_mb': manifest.get('cas_threshold_mb')
+        }
+    
+    def get_change_summary(self, obj):
+        """Get detailed change summary with file names"""
+        summary = obj.get_change_summary()
+        
+        # Limit number of files shown to prevent huge responses
+        max_files = 50
+        
+        if summary.get('added_files'):
+            summary['added_files'] = summary['added_files'][:max_files]
+            if len(summary.get('added_files', [])) >= max_files:
+                summary['added_files_truncated'] = True
+        
+        if summary.get('modified_files'):
+            summary['modified_files'] = summary['modified_files'][:max_files]
+            if len(summary.get('modified_files', [])) >= max_files:
+                summary['modified_files_truncated'] = True
+        
+        if summary.get('deleted_files'):
+            summary['deleted_files'] = summary['deleted_files'][:max_files]
+            if len(summary.get('deleted_files', [])) >= max_files:
+                summary['deleted_files_truncated'] = True
+        
+        return summary
 
 
 class VersionListSerializer(serializers.ModelSerializer):
-    """Lightweight version list serializer with status indicators"""
-    version_number = serializers.SerializerMethodField()
+    """Lightweight version list with change summary"""
+    uid = serializers.CharField(read_only=True)
+    version_number = serializers.IntegerField(read_only=True)
     file_size_mb = serializers.SerializerMethodField()
     storage_type = serializers.SerializerMethodField()
     created_by_username = serializers.CharField(source='created_by.username', read_only=True)
     is_ready = serializers.SerializerMethodField()
     status_display = serializers.CharField(source='get_status_display', read_only=True)
     
+    size_change_mb = serializers.SerializerMethodField()
+    has_changes = serializers.SerializerMethodField()
+    
     class Meta:
         model = Version
         fields = [
-            'id', 'version_number', 'commit_message',
+            'uid', 'id', 'version_number', 'commit_message',
             'status', 'status_display', 'is_ready',
             'is_snapshot', 'storage_type',
             'file_size_mb', 'file_count', 
             'created_at', 'completed_at',
-            'created_by_username'
+            'created_by_username',
+            'files_added', 'files_modified', 'files_deleted',
+            'size_change_mb', 'has_changes'
         ]
     
-    def get_version_number(self, obj):
-        """Get version number for completed versions only"""
-        if obj.status == 'completed':
-            return obj.get_version_number()
-        return None
-    
     def get_file_size_mb(self, obj):
-        """Get file size in MB"""
         return obj.get_file_size_mb()
     
+    def get_size_change_mb(self, obj):
+        return obj.get_size_change_mb()
+    
     def get_storage_type(self, obj):
-        """Get storage type"""
         return 'Snapshot' if obj.is_snapshot else 'CAS'
     
     def get_is_ready(self, obj):
-        """Check if version is ready for use"""
         return obj.is_ready()
+    
+    def get_has_changes(self, obj):
+        return (obj.files_added + obj.files_modified + obj.files_deleted) > 0
 
 
 class DownloadRequestSerializer(serializers.ModelSerializer):
-    """Download request with progress tracking"""
+    """Download request with UID"""
+    uid = serializers.CharField(read_only=True)
     version_number = serializers.SerializerMethodField()
+    version_uid = serializers.CharField(source='version.uid', read_only=True)
     project_name = serializers.CharField(source='version.project.name', read_only=True)
+    project_uid = serializers.CharField(source='version.project.uid', read_only=True)
     requested_by_username = serializers.CharField(source='requested_by.username', read_only=True)
     download_url = serializers.SerializerMethodField()
     file_size_mb = serializers.SerializerMethodField()
     is_expired = serializers.SerializerMethodField()
-    time_remaining = serializers.SerializerMethodField()
+    time_remaining_seconds = serializers.SerializerMethodField()
+    time_remaining_formatted = serializers.SerializerMethodField()
+    expiration_hours = serializers.SerializerMethodField()
     status_display = serializers.CharField(source='get_status_display', read_only=True)
     
     class Meta:
         model = DownloadRequest
         fields = [
-            'id', 'version', 'version_number', 'project_name',
+            'uid', 'id', 'version', 'version_uid', 'version_number', 
+            'project_name', 'project_uid',
             'requested_by', 'requested_by_username',
             'status', 'status_display', 'progress', 'message',
             'download_url', 'file_size', 'file_size_mb',
             'created_at', 'completed_at', 'expires_at',
-            'is_expired', 'time_remaining',
+            'is_expired', 'time_remaining_seconds', 'time_remaining_formatted',
+            'expiration_hours',
             'error_details'
         ]
         read_only_fields = [
-            'status', 'progress', 'message', 'download_url',
+            'uid', 'status', 'progress', 'message', 'download_url',
             'file_size', 'created_at', 'completed_at', 'expires_at',
             'error_details'
         ]
     
     def get_version_number(self, obj):
-        """Get version number"""
-        return obj.version.get_version_number()
+        return obj.version.version_number
     
     def get_download_url(self, obj):
-        """Get download URL if available"""
         if obj.status == 'completed' and not obj.is_expired():
             request = self.context.get('request')
             if request and obj.zip_file:
@@ -170,40 +228,41 @@ class DownloadRequestSerializer(serializers.ModelSerializer):
         return None
     
     def get_file_size_mb(self, obj):
-        """Get file size in MB"""
         if obj.file_size:
             return round(obj.file_size / (1024 * 1024), 2)
         return None
     
     def get_is_expired(self, obj):
-        """Check if download has expired"""
         return obj.is_expired()
     
-    def get_time_remaining(self, obj):
-        """Get time remaining until expiration in hours"""
-        from django.utils import timezone
-        if obj.expires_at and obj.status == 'completed':
-            remaining = (obj.expires_at - timezone.now()).total_seconds() / 3600
-            if remaining > 0:
-                return round(remaining, 1)
-        return None
+    def get_time_remaining_seconds(self, obj):
+        return obj.get_time_remaining_seconds()
+    
+    def get_time_remaining_formatted(self, obj):
+        return obj.get_time_remaining_formatted()
+    
+    def get_expiration_hours(self, obj):
+        return obj.EXPIRATION_HOURS
 
 
 class PendingPushSerializer(serializers.ModelSerializer):
-    """Push request with approval workflow"""
+    """Push request with UID"""
+    uid = serializers.CharField(read_only=True)
     project_name = serializers.CharField(source='project.name', read_only=True)
+    project_uid = serializers.CharField(source='project.uid', read_only=True)
     created_by_username = serializers.CharField(source='created_by.username', read_only=True)
     approved_by_username = serializers.CharField(source='approved_by.username', read_only=True, allow_null=True)
     is_active = serializers.SerializerMethodField()
     duration = serializers.SerializerMethodField()
     version_number = serializers.SerializerMethodField()
+    version_uid = serializers.SerializerMethodField()
     version_status = serializers.SerializerMethodField()
     requires_approval = serializers.SerializerMethodField()
     
     class Meta:
         model = PendingPush
         fields = [
-            'id', 'project', 'project_name',
+            'uid', 'id', 'project', 'project_uid', 'project_name',
             'commit_message', 'file_list',
             'status', 'progress', 'message', 'error_details',
             'is_active', 'duration',
@@ -211,40 +270,40 @@ class PendingPushSerializer(serializers.ModelSerializer):
             'created_by', 'created_by_username',
             'approved_by', 'approved_by_username', 'approved_at',
             'rejection_reason',
-            'version', 'version_number', 'version_status',
+            'version', 'version_uid', 'version_number', 'version_status',
             'requires_approval'
         ]
         read_only_fields = [
-            'status', 'progress', 'message',
+            'uid', 'status', 'progress', 'message',
             'created_at', 'completed_at', 'created_by',
             'approved_by', 'approved_at'
         ]
     
     def get_is_active(self, obj):
-        """Check if push is active"""
         return obj.is_active()
     
     def get_duration(self, obj):
-        """Get push duration in seconds"""
         from django.utils import timezone
         end_time = obj.completed_at or timezone.now()
         duration = (end_time - obj.created_at).total_seconds()
         return round(duration, 2)
     
     def get_version_number(self, obj):
-        """Get version number if available"""
-        if obj.version and obj.version.status == 'completed':
-            return obj.version.get_version_number()
+        if obj.version and obj.version.version_number:
+            return obj.version.version_number
+        return None
+    
+    def get_version_uid(self, obj):
+        if obj.version:
+            return obj.version.uid
         return None
     
     def get_version_status(self, obj):
-        """Get version status"""
         if obj.version:
             return obj.version.status
         return None
     
     def get_requires_approval(self, obj):
-        """Check if this push requires approval"""
         return (
             obj.project.require_push_approval and
             obj.created_by != obj.project.owner
@@ -252,13 +311,12 @@ class PendingPushSerializer(serializers.ModelSerializer):
 
 
 class VersionUploadSerializer(serializers.Serializer):
-    """Serializer for version upload from plugin"""
+    """Version upload from plugin"""
     project_name = serializers.CharField(max_length=255)
     commit_message = serializers.CharField(required=False, default='Version from DAW plugin')
     file_list = serializers.ListField(child=serializers.DictField())
     
     def validate_file_list(self, value):
-        """Validate file list structure"""
         if not isinstance(value, list):
             raise serializers.ValidationError("file_list must be an array")
         

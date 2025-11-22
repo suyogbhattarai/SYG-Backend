@@ -1,7 +1,7 @@
 """
 versions/download_tasks.py
 Celery tasks for creating temporary download ZIPs
-Works with file-based manifest storage
+UPDATED: Added automatic cleanup of expired downloads
 """
 
 import os
@@ -86,7 +86,7 @@ def create_download_zip(self, download_id):
                 # Cleanup
                 shutil.rmtree(temp_dir, ignore_errors=True)
                 
-                return f"Snapshot ZIP ready ({round(file_size / 1024 / 1024, 2)} MB)"
+                return f"Snapshot ZIP ready ({round(file_size / 1024 / 1024, 2)} MB, expires in {download.EXPIRATION_HOURS}h)"
             
             # For CAS versions, restore and create ZIP
             update_download_progress(download, 20, "Restoring version from CAS storage...")
@@ -169,7 +169,7 @@ def create_download_zip(self, download_id):
             shutil.rmtree(temp_dir, ignore_errors=True)
             
             file_size_mb = round(file_size / (1024 * 1024), 2)
-            return f"ZIP created successfully ({file_size_mb} MB)"
+            return f"ZIP created successfully ({file_size_mb} MB, expires in {download.EXPIRATION_HOURS}h)"
         
         except Exception as e:
             # Cleanup on error
@@ -198,13 +198,62 @@ def create_download_zip(self, download_id):
 def cleanup_expired_downloads():
     """
     Periodic task to cleanup expired download requests
-    Run daily via Celery Beat
+    Run every hour via Celery Beat
+    Deletes expired downloads and their associated ZIP files
     
     Returns:
         Status message string
     """
     from django.utils import timezone
     
+    # Find expired downloads
+    expired_downloads = DownloadRequest.objects.filter(
+        status='completed',
+        expires_at__lt=timezone.now()
+    )
+    
+    count = 0
+    total_size_freed = 0
+    
+    for download in expired_downloads:
+        try:
+            # Track file size before deletion
+            if download.file_size:
+                total_size_freed += download.file_size
+            
+            # Mark as expired
+            download.status = 'expired'
+            download.save()
+            
+            # Delete (triggers file deletion via signal)
+            download.delete()
+            count += 1
+            
+            print(f"Cleaned up expired download {download.id}")
+            
+        except Exception as e:
+            print(f"Error cleaning up download {download.id}: {e}")
+    
+    total_size_mb = round(total_size_freed / (1024 * 1024), 2)
+    message = f"Cleaned up {count} expired downloads, freed {total_size_mb} MB"
+    print(message)
+    
+    return message
+
+
+@shared_task
+def check_and_mark_expired_downloads():
+    """
+    Check for expired downloads and mark them as expired
+    This allows the UI to show expired status before actual deletion
+    Run every 15 minutes via Celery Beat
+    
+    Returns:
+        Status message string
+    """
+    from django.utils import timezone
+    
+    # Find completed downloads that have expired but aren't marked as expired
     expired_downloads = DownloadRequest.objects.filter(
         status='completed',
         expires_at__lt=timezone.now()
@@ -214,10 +263,15 @@ def cleanup_expired_downloads():
     for download in expired_downloads:
         try:
             download.status = 'expired'
-            download.save()
-            download.delete()  # Triggers file deletion
+            download.message = 'Download link has expired. Please request a new download.'
+            download.save(update_fields=['status', 'message'])
             count += 1
         except Exception as e:
-            print(f"Error cleaning up download {download.id}: {e}")
+            print(f"Error marking download {download.id} as expired: {e}")
     
-    return f"Cleaned up {count} expired downloads"
+    if count > 0:
+        message = f"Marked {count} downloads as expired"
+        print(message)
+        return message
+    
+    return "No downloads to mark as expired"

@@ -1,11 +1,9 @@
 """
 versions/views.py
-Version control and push management views with CAS support
-Optimized to handle cancellation and version status properly
+FIXED: UID support and secure 404 responses for unauthorized access
 """
 
 import os
-import tempfile
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -13,10 +11,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
-from django.http import FileResponse, HttpResponse, Http404
+from django.http import FileResponse, Http404
 
 from projects.models import Project
-from projects.permissions import CanViewProject, CanEditProject
 from .models import Version, PendingPush, DownloadRequest
 from .serializers import (
     VersionSerializer,
@@ -32,14 +29,14 @@ import fnmatch
 
 
 def sanitize_string(s):
-    """Remove null characters and other problematic characters"""
+    """Remove null characters"""
     if not isinstance(s, str):
         return s
     return ''.join(char for char in s if ord(char) >= 32 or char in '\n\r\t')
 
 
 def sanitize_dict(data):
-    """Recursively sanitize all strings in a dictionary"""
+    """Recursively sanitize strings"""
     if isinstance(data, dict):
         return {k: sanitize_dict(v) for k, v in data.items()}
     elif isinstance(data, list):
@@ -50,28 +47,80 @@ def sanitize_dict(data):
         return data
 
 
+def get_project_or_404(uid_or_id, user):
+    """Get project by UID or return 404 (not permission denied)"""
+    try:
+        project = Project.objects.get(uid=uid_or_id)
+    except Project.DoesNotExist:
+        raise Http404("Project not found")
+    
+    # Check permissions - return 404 instead of 403 for security
+    if not project.user_can_view(user):
+        raise Http404("Project not found")
+    
+    return project
+
+
+def get_version_or_404(uid_or_id, user):
+    """Get version by UID or return 404"""
+    try:
+        version = Version.objects.get(uid=uid_or_id)
+    except Version.DoesNotExist:
+        raise Http404("Version not found")
+    
+    if not version.project.user_can_view(user):
+        raise Http404("Version not found")
+    
+    return version
+
+
+def get_download_or_404(uid_or_id, user):
+    """Get download request by UID or return 404"""
+    try:
+        download = DownloadRequest.objects.get(uid=uid_or_id)
+    except DownloadRequest.DoesNotExist:
+        raise Http404("Download not found")
+    
+    if not download.version.project.user_can_view(user):
+        raise Http404("Download not found")
+    
+    return download
+
+
+def get_push_or_404(uid_or_id, user):
+    """Get push by UID or return 404"""
+    try:
+        push = PendingPush.objects.get(uid=uid_or_id)
+    except PendingPush.DoesNotExist:
+        raise Http404("Push not found")
+    
+    if not push.project.user_can_view(user):
+        raise Http404("Push not found")
+    
+    return push
+
+
 # ============================================================================
 # VERSION ENDPOINTS
 # ============================================================================
 
 class ProjectVersionsView(APIView):
-    """Get all versions for a project (only completed ones by default)"""
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated, CanViewProject]
+    """Get all versions for a project"""
+ 
+    permission_classes = [IsAuthenticated]
     
-    def get(self, request, project_id):
-        """List all versions for a project"""
-        project = get_object_or_404(Project, id=project_id)
-        self.check_object_permissions(request, project)
+    def get(self, request, project_uid):
+        """List all versions"""
+        project = get_project_or_404(project_uid, request.user)
         
-        # Query parameter to include processing versions
         include_processing = request.query_params.get('include_processing', 'false').lower() == 'true'
         
         if include_processing:
             versions = project.versions_new.all().order_by('-created_at')
         else:
-            # Default: only show completed versions
-            versions = project.versions_new.filter(status__in=['completed', 'processing']).order_by('-created_at')
+            versions = project.versions_new.filter(
+                status__in=['completed', 'processing']
+            ).order_by('-created_at')
         
         serializer = VersionListSerializer(
             versions,
@@ -80,7 +129,7 @@ class ProjectVersionsView(APIView):
         )
         
         return Response(sanitize_dict({
-            'project_id': project.id,
+            'project_uid': project.uid,
             'project_name': project.name,
             'version_count': versions.count(),
             'completed_count': project.versions_new.filter(status='completed').count(),
@@ -91,37 +140,26 @@ class ProjectVersionsView(APIView):
 
 class VersionDetailView(APIView):
     """Get or delete a specific version"""
-    authentication_classes = [JWTAuthentication]
+
     permission_classes = [IsAuthenticated]
     
-    def get(self, request, version_id):
+    def get(self, request, version_uid):
         """Get version details"""
-        version = get_object_or_404(Version, id=version_id)
-        
-        # Check permissions
-        if not version.project.user_can_view(request.user):
-            return Response(
-                {'error': 'Access denied'},
-                status=status.HTTP_403_FORBIDDEN
-            )
+        version = get_version_or_404(version_uid, request.user)
         
         serializer = VersionSerializer(version, context={'request': request})
         return Response(sanitize_dict(serializer.data))
     
-    def delete(self, request, version_id):
+    def delete(self, request, version_uid):
         """Delete a version"""
-        version = get_object_or_404(Version, id=version_id)
+        version = get_version_or_404(version_uid, request.user)
         project = version.project
         
         # Only owner or creator can delete
         if project.owner != request.user and version.created_by != request.user:
-            return Response(
-                {'error': 'Only project owner or version creator can delete versions'},
-                status=status.HTTP_403_FORBIDDEN
-            )
+            raise Http404("Version not found")
         
-        # Get version number before deletion (only for completed versions)
-        version_num = version.get_version_number() if version.status == 'completed' else None
+        version_num = version.version_number if version.status == 'completed' else None
         version_status = version.status
         
         version.delete()
@@ -138,12 +176,12 @@ class VersionDetailView(APIView):
 
 
 class VersionUploadView(APIView):
-    """Create a new version push request from plugin"""
-    authentication_classes = [JWTAuthentication]
+    """Create new version push"""
+
     permission_classes = [IsAuthenticated]
     
     def post(self, request):
-        """Handle version upload from DAW plugin"""
+        """Handle version upload"""
         serializer = VersionUploadSerializer(data=request.data)
         
         if not serializer.is_valid():
@@ -165,14 +203,13 @@ class VersionUploadView(APIView):
                 name=project_name
             )
         
-        # Check edit permission
         if not project.user_can_edit(request.user):
             return Response(
                 {'error': 'You do not have permission to push to this project'},
                 status=status.HTTP_403_FORBIDDEN
             )
         
-        # Filter files based on ignore patterns
+        # Filter by ignore patterns
         if project.ignore_patterns:
             filtered_file_list = []
             for file_entry in file_list:
@@ -189,20 +226,20 @@ class VersionUploadView(APIView):
             
             file_list = filtered_file_list
         
-        # Create version placeholder with 'pending' status
+        # Create version placeholder
         version = Version.objects.create(
             project=project,
             commit_message=commit_message,
             created_by=request.user,
-            status='pending'  # Will be updated to 'processing' then 'completed'
+            status='pending'
         )
         
-        # Determine initial status
+        # Determine status
         initial_status = 'pending'
         if project.require_push_approval and request.user != project.owner:
             initial_status = 'awaiting_approval'
         
-        # Create pending push
+        # Create push
         pending_push = PendingPush.objects.create(
             project=project,
             created_by=request.user,
@@ -211,7 +248,7 @@ class VersionUploadView(APIView):
             version=version,
             status=initial_status,
             progress=0,
-            message='Push request received' if initial_status == 'pending' else 'Awaiting approval from project owner'
+            message='Push request received' if initial_status == 'pending' else 'Awaiting approval'
         )
         
         # Start processing if no approval needed
@@ -226,10 +263,10 @@ class VersionUploadView(APIView):
                 }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
         return Response(sanitize_dict({
-            'push_id': pending_push.id,
-            'project_id': project.id,
+            'push_uid': pending_push.uid,
+            'project_uid': project.uid,
             'project_name': project.name,
-            'version_id': version.id,
+            'version_uid': version.uid,
             'message': 'Push initiated' if initial_status == 'pending' else 'Push awaiting approval',
             'status': initial_status,
             'requires_approval': initial_status == 'awaiting_approval'
@@ -237,26 +274,18 @@ class VersionUploadView(APIView):
 
 
 # ============================================================================
-# VERSION RESTORE/DOWNLOAD ENDPOINTS
+# DOWNLOAD ENDPOINTS
 # ============================================================================
 
 class RequestVersionDownloadView(APIView):
-    """Request creation of a download ZIP (initiates async task)"""
-    authentication_classes = [JWTAuthentication]
+    """Request download ZIP creation"""
+ 
     permission_classes = [IsAuthenticated]
-    
-    def post(self, request, version_id):
-        """Request download ZIP creation"""
-        version = get_object_or_404(Version, id=version_id)
+
+    def post(self, request, version_uid):
+        """Request download"""
+        version = get_version_or_404(version_uid, request.user)
         
-        # Check permissions
-        if not version.project.user_can_view(request.user):
-            return Response(
-                {'error': 'Access denied'},
-                status=status.HTTP_403_FORBIDDEN
-            )
-        
-        # Check if version is ready
         if not version.is_ready():
             return Response({
                 'error': 'Version is not ready for download',
@@ -264,7 +293,7 @@ class RequestVersionDownloadView(APIView):
                 'message': 'This version is still being processed'
             }, status=status.HTTP_400_BAD_REQUEST)
         
-        # Check if there's already a recent download request
+        # Check for recent download
         from django.utils import timezone
         from datetime import timedelta
         
@@ -272,26 +301,24 @@ class RequestVersionDownloadView(APIView):
             version=version,
             requested_by=request.user,
             status__in=['pending', 'processing', 'completed'],
-            created_at__gte=timezone.now() - timedelta(minutes=30)
+            created_at__gte=timezone.now() - timedelta(hours=DownloadRequest.EXPIRATION_HOURS)
         ).first()
         
         if recent_request:
             if recent_request.status == 'completed' and not recent_request.is_expired():
-                # Return existing completed download
                 serializer = DownloadRequestSerializer(recent_request, context={'request': request})
                 return Response({
                     'message': 'Using existing download',
                     'download': sanitize_dict(serializer.data)
                 })
             elif recent_request.status in ['pending', 'processing']:
-                # Return existing in-progress request
                 serializer = DownloadRequestSerializer(recent_request, context={'request': request})
                 return Response({
                     'message': 'Download already in progress',
                     'download': sanitize_dict(serializer.data)
                 })
         
-        # Create new download request
+        # Create new request
         download_request = DownloadRequest.objects.create(
             version=version,
             requested_by=request.user,
@@ -300,7 +327,6 @@ class RequestVersionDownloadView(APIView):
             message='Download request queued'
         )
         
-        # Queue the ZIP creation task
         try:
             create_download_zip.delay(download_request.id)
         except Exception as e:
@@ -319,42 +345,33 @@ class RequestVersionDownloadView(APIView):
 
 
 class DownloadRequestStatusView(APIView):
-    """Check status of a download request (for polling)"""
-    authentication_classes = [JWTAuthentication]
+    """Check download status"""
+
     permission_classes = [IsAuthenticated]
     
-    def get(self, request, download_id):
-        """Get download request status"""
-        download_request = get_object_or_404(DownloadRequest, id=download_id)
+    def get(self, request, download_uid):
+        """Get download status"""
+        download_request = get_download_or_404(download_uid, request.user)
         
-        # Check permissions
-        if not download_request.version.project.user_can_view(request.user):
-            return Response(
-                {'error': 'Access denied'},
-                status=status.HTTP_403_FORBIDDEN
-            )
+        # Check expiration
+        if download_request.status == 'completed' and download_request.is_expired():
+            download_request.status = 'expired'
+            download_request.message = 'Download link has expired. Please request a new download.'
+            download_request.save(update_fields=['status', 'message'])
         
         serializer = DownloadRequestSerializer(download_request, context={'request': request})
         return Response(sanitize_dict(serializer.data))
 
 
 class VersionDownloadView(APIView):
-    """Download the ZIP file directly"""
-    authentication_classes = [JWTAuthentication]
+    """Download ZIP file"""
+
     permission_classes = [IsAuthenticated]
     
-    def get(self, request, download_id):
-        """Download the ZIP file"""
-        download_request = get_object_or_404(DownloadRequest, id=download_id)
+    def get(self, request, download_uid):
+        """Download file"""
+        download_request = get_download_or_404(download_uid, request.user)
         
-        # Check permissions
-        if not download_request.version.project.user_can_view(request.user):
-            return Response(
-                {'error': 'Access denied'},
-                status=status.HTTP_403_FORBIDDEN
-            )
-        
-        # Check if download is ready
         if download_request.status != 'completed':
             return Response({
                 'error': 'Download not ready',
@@ -363,14 +380,17 @@ class VersionDownloadView(APIView):
                 'message': download_request.message
             }, status=status.HTTP_400_BAD_REQUEST)
         
-        # Check if expired
         if download_request.is_expired():
+            download_request.status = 'expired'
+            download_request.message = 'Download link has expired'
+            download_request.save(update_fields=['status', 'message'])
+            
             return Response({
                 'error': 'Download has expired',
-                'message': 'Please request a new download'
+                'message': f'Download expired after {download_request.EXPIRATION_HOURS} hours',
+                'expiration_hours': download_request.EXPIRATION_HOURS
             }, status=status.HTTP_410_GONE)
         
-        # Serve the file
         if not download_request.zip_file:
             return Response({
                 'error': 'Download file not found'
@@ -378,7 +398,8 @@ class VersionDownloadView(APIView):
         
         try:
             version = download_request.version
-            filename = f"{version.project.name}_v{version.get_version_number()}.zip"
+            version_number = version.version_number or 'unknown'
+            filename = f"{version.project.name}_v{version_number}.zip"
             
             response = FileResponse(
                 open(download_request.zip_file.path, 'rb'),
@@ -396,22 +417,14 @@ class VersionDownloadView(APIView):
 
 
 class VersionFileListView(APIView):
-    """Get list of files in a version"""
-    authentication_classes = [JWTAuthentication]
+    """Get file list from version"""
+
     permission_classes = [IsAuthenticated]
     
-    def get(self, request, version_id):
-        """Get file list from version"""
-        version = get_object_or_404(Version, id=version_id)
+    def get(self, request, version_uid):
+        """Get file list"""
+        version = get_version_or_404(version_uid, request.user)
         
-        # Check permissions
-        if not version.project.user_can_view(request.user):
-            return Response(
-                {'error': 'Access denied'},
-                status=status.HTTP_403_FORBIDDEN
-            )
-        
-        # Check if version is ready
         if not version.is_ready():
             return Response({
                 'error': 'Version is not ready',
@@ -423,11 +436,12 @@ class VersionFileListView(APIView):
             files = get_version_file_list(version)
             
             return Response({
-                'version_id': version.id,
-                'version_number': version.get_version_number(),
+                'version_uid': version.uid,
+                'version_number': version.version_number,
                 'storage_type': version.get_storage_type(),
                 'file_count': len(files),
-                'files': files
+                'files': files,
+                'change_summary': version.get_change_summary()
             })
         
         except Exception as e:
@@ -438,57 +452,42 @@ class VersionFileListView(APIView):
 
 
 # ============================================================================
-# PUSH MANAGEMENT ENDPOINTS
+# PUSH MANAGEMENT
 # ============================================================================
 
 class PushStatusView(APIView):
-    """Get status of a specific push"""
-    authentication_classes = [JWTAuthentication]
+    """Get push status"""
+
     permission_classes = [IsAuthenticated]
     
-    def get(self, request, push_id):
-        """Get push status"""
-        push = get_object_or_404(PendingPush, id=push_id)
-        
-        # Check permissions
-        if not push.project.user_can_view(request.user):
-            return Response(
-                {'error': 'Access denied'},
-                status=status.HTTP_403_FORBIDDEN
-            )
+    def get(self, request, push_uid):
+        """Get status"""
+        push = get_push_or_404(push_uid, request.user)
         
         serializer = PendingPushSerializer(push, context={'request': request})
         return Response(sanitize_dict(serializer.data))
 
 
 class ApprovePushView(APIView):
-    """Approve a pending push (owner only)"""
-    authentication_classes = [JWTAuthentication]
+    """Approve push"""
+  
     permission_classes = [IsAuthenticated]
     
-    def post(self, request, push_id):
-        """Approve push and start processing"""
-        push = get_object_or_404(PendingPush, id=push_id)
-        project = push.project
+    def post(self, request, push_uid):
+        """Approve"""
+        push = get_push_or_404(push_uid, request.user)
         
-        # Only owner can approve
-        if project.owner != request.user:
-            return Response(
-                {'error': 'Only project owner can approve pushes'},
-                status=status.HTTP_403_FORBIDDEN
-            )
+        if push.project.owner != request.user:
+            raise Http404("Push not found")
         
-        # Check status
         if push.status != 'awaiting_approval':
             return Response(
                 {'error': f'Cannot approve push with status: {push.status}'},
                 status=status.HTTP_400_BAD_REQUEST
             )
         
-        # Approve
         push.approve(request.user)
         
-        # Start processing
         try:
             process_pending_push_new.delay(push.id)
         except Exception as e:
@@ -500,72 +499,66 @@ class ApprovePushView(APIView):
         
         return Response({
             'message': 'Push approved and processing started',
-            'push_id': push.id
+            'push_uid': push.uid
         })
 
 
 class RejectPushView(APIView):
-    """Reject a pending push (owner only)"""
-    authentication_classes = [JWTAuthentication]
+    """Reject push"""
+   
     permission_classes = [IsAuthenticated]
     
-    def post(self, request, push_id):
-        """Reject push and cleanup associated version"""
-        push = get_object_or_404(PendingPush, id=push_id)
-        project = push.project
+    def post(self, request, push_uid):
+        """Reject"""
+        push = get_push_or_404(push_uid, request.user)
         
-        # Only owner can reject
-        if project.owner != request.user:
-            return Response(
-                {'error': 'Only project owner can reject pushes'},
-                status=status.HTTP_403_FORBIDDEN
-            )
+        if push.project.owner != request.user:
+            raise Http404("Push not found")
         
-        # Check status
         if push.status != 'awaiting_approval':
             return Response(
                 {'error': f'Cannot reject push with status: {push.status}'},
                 status=status.HTTP_400_BAD_REQUEST
             )
         
-        # Reject (will automatically delete associated version)
         reason = sanitize_string(request.data.get('reason', ''))
         push.reject(request.user, reason)
         
         return Response({
             'message': 'Push rejected and version removed',
-            'push_id': push.id,
+            'push_uid': push.uid,
             'reason': reason
         })
 
 
 class CancelPushView(APIView):
-    """Cancel an active push"""
-    authentication_classes = [JWTAuthentication]
+    """Cancel push"""
+
     permission_classes = [IsAuthenticated]
     
-    def post(self, request, push_id):
-        """Cancel push and cleanup associated version"""
-        push = get_object_or_404(PendingPush, id=push_id)
+    def post(self, request, push_uid):
+        """Cancel"""
+        push = get_push_or_404(push_uid, request.user)
         
-        # Only creator or owner can cancel
         if push.created_by != request.user and push.project.owner != request.user:
-            return Response(
-                {'error': 'Only push creator or project owner can cancel'},
-                status=status.HTTP_403_FORBIDDEN
-            )
+            raise Http404("Push not found")
         
-        # Check status
         if push.status in ['done', 'failed', 'rejected', 'cancelled']:
             return Response(
                 {'error': f'Cannot cancel push - already {push.status}'},
                 status=status.HTTP_400_BAD_REQUEST
             )
         
-        # Cancel (will automatically delete associated version)
         push.cancel()
         
         return Response({
-            'message': 'Push cancelled successfully and version removed',
-            'push_id': push.id
+            'message': 'Push cancelled successfully',
+            'push_uid': push.uid
         })
+    
+class SimpleTestView(APIView):
+    authentication_classes = []
+    permission_classes = []
+    
+    def post(self, request):
+        return Response({'status': 'POST works!'})

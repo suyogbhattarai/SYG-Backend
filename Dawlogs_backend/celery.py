@@ -14,8 +14,14 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks()
 
 app.conf.beat_schedule = {
+    'check-expired-downloads': {
+        'task': 'versions.download_tasks.check_and_mark_expired_downloads',
+        'schedule': crontab(minute='*/15'),  # Every 15 minutes
+    },
+    
+    # Actually delete expired downloads and free storage every hour
     'cleanup-expired-downloads': {
         'task': 'versions.download_tasks.cleanup_expired_downloads',
-        'schedule': crontab(hour=3, minute=0),  # Run daily at 3 AM
+        'schedule': crontab(minute=0),  # Every hour at :00
     },
 }

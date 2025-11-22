@@ -1,7 +1,6 @@
 """
 versions/tasks.py
-Celery tasks for version processing with file-based manifest storage
-COMPLETE FIXED VERSION - Solves hash, duplicate detection, file size issues
+FIXED: Detailed file change tracking with filenames
 """
 
 import os
@@ -50,12 +49,114 @@ def compute_manifest_hash(manifest):
             'size': f.get('size')
         })
     
-    # Sort by path for consistency
     file_hashes.sort(key=lambda x: x['path'])
-    
-    # Compute hash
     manifest_str = json.dumps(file_hashes, sort_keys=True)
     return hashlib.sha256(manifest_str.encode()).hexdigest()
+
+def compare_with_previous_version(current_manifest, previous_version):
+    """
+    Compare with previous version and return detailed changes
+    Returns: (files_added, files_modified, files_deleted, size_change, change_details)
+    """
+    if not previous_version:
+        current_files = current_manifest.get('files', [])
+        total_size = sum(f.get('size', 0) for f in current_files)
+        
+        added_files = [
+            {
+                'path': f['path'],
+                'size': f.get('size', 0),
+                'hash': f.get('hash')
+            }
+            for f in current_files
+        ]
+        
+        change_details = {
+            'added_files': added_files,
+            'modified_files': [],
+            'deleted_files': []
+        }
+        
+        return len(current_files), 0, 0, total_size, change_details
+    
+    prev_manifest = previous_version.load_manifest_from_file()
+    if not prev_manifest:
+        current_files = current_manifest.get('files', [])
+        total_size = sum(f.get('size', 0) for f in current_files)
+        
+        added_files = [
+            {
+                'path': f['path'],
+                'size': f.get('size', 0),
+                'hash': f.get('hash')
+            }
+            for f in current_files
+        ]
+        
+        change_details = {
+            'added_files': added_files,
+            'modified_files': [],
+            'deleted_files': []
+        }
+        
+        return len(current_files), 0, 0, total_size, change_details
+    
+    current_files = {f['path']: f for f in current_manifest.get('files', [])}
+    prev_files = {f['path']: f for f in prev_manifest.get('files', [])}
+    
+    files_added = 0
+    files_modified = 0
+    files_deleted = 0
+    size_change = 0
+    
+    added_files = []
+    modified_files = []
+    deleted_files = []
+    
+    # Check for added and modified files
+    for path, current_file in current_files.items():
+        if path not in prev_files:
+            files_added += 1
+            size_change += current_file.get('size', 0)
+            added_files.append({
+                'path': path,
+                'size': current_file.get('size', 0),
+                'hash': current_file.get('hash')
+            })
+        else:
+            prev_file = prev_files[path]
+            if current_file.get('hash') != prev_file.get('hash'):
+                files_modified += 1
+                size_change += current_file.get('size', 0) - prev_file.get('size', 0)
+                modified_files.append({
+                    'path': path,
+                    'old_size': prev_file.get('size', 0),
+                    'new_size': current_file.get('size', 0),
+                    'size_change': current_file.get('size', 0) - prev_file.get('size', 0),
+                    'old_hash': prev_file.get('hash'),
+                    'new_hash': current_file.get('hash')
+                })
+    
+    # Check for deleted files
+    for path, prev_file in prev_files.items():
+        if path not in current_files:
+            files_deleted += 1
+            size_change -= prev_file.get('size', 0)
+            deleted_files.append({
+                'path': path,
+                'size': prev_file.get('size', 0),
+                'hash': prev_file.get('hash')
+            })
+    
+    change_details = {
+        'added_files': added_files,
+        'modified_files': modified_files,
+        'deleted_files': deleted_files
+    }
+    
+    logger.info(f"Changes: +{files_added} added, ~{files_modified} modified, -{files_deleted} deleted")
+    
+    return files_added, files_modified, files_deleted, size_change, change_details
 
 def update_push_progress(push: PendingPush, status: str, progress: int, message: str = None):
     """Update push status and progress"""
@@ -64,10 +165,10 @@ def update_push_progress(push: PendingPush, status: str, progress: int, message:
     if message is not None:
         push.message = message
     push.save()
-    logger.info(f"Push {push.id}: status={status}, progress={progress}%, message={message}")
+    logger.info(f"Push {push.uid}: {status}, {progress}%, {message}")
 
 def should_ignore_file(rel_path, ignore_patterns):
-    """Check if file should be ignored based on patterns"""
+    """Check if file should be ignored"""
     for pattern in ignore_patterns:
         if fnmatch.fnmatch(rel_path, pattern):
             return True
@@ -79,7 +180,7 @@ def should_ignore_file(rel_path, ignore_patterns):
     return False
 
 def should_create_snapshot(version_number):
-    """Determine if snapshot should be created for version"""
+    """Determine if snapshot should be created"""
     return version_number % SNAPSHOT_INTERVAL == 0
 
 def get_or_create_blob(file_path, file_hash):
@@ -92,7 +193,7 @@ def get_or_create_blob(file_path, file_hash):
         pass
 
     file_size = os.path.getsize(file_path)
-    logger.info(f"Creating new blob: {file_hash[:16]}... ({round(file_size / 1024 / 1024, 2)} MB)")
+    logger.info(f"Creating blob: {file_hash[:16]}... ({round(file_size / 1024 / 1024, 2)} MB)")
 
     with open(file_path, 'rb') as f:
         file_content = f.read()
@@ -102,10 +203,7 @@ def get_or_create_blob(file_path, file_hash):
     return blob
 
 def create_cas_manifest(file_list, master_dir):
-    """
-    Create CAS manifest
-    Returns: (manifest_dict, total_size, cas_count, inline_count)
-    """
+    """Create CAS manifest"""
     manifest = {
         'files': [],
         'created_at': timezone.now().isoformat(),
@@ -144,7 +242,6 @@ def create_cas_manifest(file_list, master_dir):
                 manifest_entry['blob_id'] = blob.id
                 manifest_entry['blob_hash'] = blob.hash
                 cas_count += 1
-                logger.info(f"CAS stored: {rel_path} -> blob {blob.id}")
             except Exception as e:
                 logger.error(f"Error storing blob for {rel_path}: {e}")
                 with open(file_path, 'rb') as f:
@@ -161,21 +258,17 @@ def create_cas_manifest(file_list, master_dir):
 
         manifest['files'].append(manifest_entry)
 
-    logger.info(f"Manifest created: {cas_count} CAS files, {inline_count} inline files, total_size={total_size} bytes")
+    logger.info(f"Manifest: {cas_count} CAS, {inline_count} inline, total={total_size}")
     return manifest, total_size, cas_count, inline_count
 
-
 def create_snapshot_zip(master_dir, version_obj):
-    """
-    Create a full ZIP snapshot of the master directory
-    Returns: (zip_file_path, file_size, file_count)
-    """
+    """Create snapshot ZIP"""
     import tempfile
     
     temp_zip = tempfile.NamedTemporaryFile(delete=False, suffix='.zip', prefix='snapshot_')
     temp_zip.close()
     
-    logger.info(f"Creating snapshot ZIP: {temp_zip.name}")
+    logger.info(f"Creating snapshot: {temp_zip.name}")
     
     total_files = 0
     with zipfile.ZipFile(temp_zip.name, 'w', zipfile.ZIP_DEFLATED) as zipf:
@@ -187,16 +280,13 @@ def create_snapshot_zip(master_dir, version_obj):
                 total_files += 1
     
     file_size = os.path.getsize(temp_zip.name)
-    logger.info(f"Snapshot ZIP created: {total_files} files, {round(file_size / 1024 / 1024, 2)} MB")
+    logger.info(f"Snapshot created: {total_files} files, {round(file_size / 1024 / 1024, 2)} MB")
     
     return temp_zip.name, file_size, total_files
 
-
 @shared_task(bind=True)
 def process_pending_push_new(self, push_id):
-    """
-    Process a pending push with proper hash saving and duplicate detection
-    """
+    """Process pending push with detailed change tracking"""
     try:
         push = PendingPush.objects.select_related('project', 'created_by', 'version').get(id=push_id)
         project = push.project
@@ -241,7 +331,7 @@ def process_pending_push_new(self, push_id):
                 filtered_list.append(f)
             file_list = filtered_list
             if ignored_count > 0:
-                update_push_progress(push, 'processing', 5, f"Ignored {ignored_count} files based on patterns")
+                update_push_progress(push, 'processing', 5, f"Ignored {ignored_count} files")
 
         push.refresh_from_db()
         if push.status == 'cancelled' and version_obj:
@@ -253,10 +343,9 @@ def process_pending_push_new(self, push_id):
         # Setup master directory
         master_dir = get_project_master_path(project.owner.username, project.name)
         os.makedirs(master_dir, exist_ok=True)
-        logger.info(f"Using master directory: {master_dir}")
         update_push_progress(push, 'processing', 15, "Using project master directory")
 
-        # Copy files from plugin cache
+        # Copy files
         total_files = len(file_list) or 1
         copied_count = 0
         skipped_count = 0
@@ -293,7 +382,7 @@ def process_pending_push_new(self, push_id):
                     shutil.copy2(local_path, dest_path)
                     copied_count += 1
                 except Exception as e:
-                    logger.error(f"Error copying file {local_path}: {e}")
+                    logger.error(f"Error copying {local_path}: {e}")
 
             progress_pct = 15 + int((idx / total_files) * 40)
             update_push_progress(push, 'processing', progress_pct, f"Processed {idx}/{total_files} files")
@@ -315,7 +404,7 @@ def process_pending_push_new(self, push_id):
                         os.remove(full_path)
                         removed_count += 1
                     except Exception as e:
-                        logger.error(f"Error removing file {full_path}: {e}")
+                        logger.error(f"Error removing {full_path}: {e}")
 
         # Cleanup empty directories
         for root, dirs, files in os.walk(master_dir, topdown=False):
@@ -329,101 +418,122 @@ def process_pending_push_new(self, push_id):
 
         update_push_progress(push, 'processing', 60, f"Master updated: {copied_count} copied, {skipped_count} unchanged, {removed_count} removed")
 
-        # Check cancellation again
         push.refresh_from_db()
         if push.status == 'cancelled' and version_obj:
             version_obj.delete()
             return "Push was cancelled"
 
-        # Determine version number and storage strategy
-        completed_versions = Version.objects.filter(project=project, status='completed').exclude(id=version_obj.id if version_obj else None)
+        # Get previous version
+        previous_version = Version.objects.filter(
+            project=project, 
+            status='completed'
+        ).exclude(uid=version_obj.uid if version_obj else None).order_by('-created_at').first()
+
+        # Determine version number
+        completed_versions = Version.objects.filter(
+            project=project, 
+            status='completed'
+        ).exclude(uid=version_obj.uid if version_obj else None)
         new_version_number = completed_versions.count() + 1
         is_snapshot = should_create_snapshot(new_version_number)
 
-        update_push_progress(push, 'processing', 65, f"Creating version {new_version_number} - {'Snapshot' if is_snapshot else 'CAS'} storage")
+        update_push_progress(push, 'processing', 65, f"Creating v{new_version_number} - {'Snapshot' if is_snapshot else 'CAS'}")
 
-        # ALWAYS create manifest for duplicate detection
-        update_push_progress(push, 'processing', 70, "Creating manifest for duplicate detection...")
+        # Create manifest
+        update_push_progress(push, 'processing', 70, "Creating manifest...")
         manifest, total_size, cas_count, inline_count = create_cas_manifest(file_list, master_dir)
         manifest_hash = compute_manifest_hash(manifest)
-        logger.info(f"Manifest hash: {manifest_hash}, files={len(manifest['files'])}")
 
-        # Check for duplicate version BEFORE creating snapshot
+        # Check for duplicate
         existing_version = Version.objects.filter(
             project=project, 
             hash=manifest_hash, 
             status='completed'
-        ).exclude(id=version_obj.id if version_obj else None).first()
+        ).exclude(uid=version_obj.uid if version_obj else None).first()
         
         if existing_version:
-            logger.info(f"Duplicate detected! Mapping to existing version {existing_version.id}")
+            logger.info(f"Duplicate detected! Mapping to v{existing_version.version_number}")
             previous_placeholder = version_obj
             push.version = existing_version
             push.mark_completed()
-            existing_version_number = existing_version.get_version_number()
-            update_push_progress(push, 'done', 100, f"Identified same files and mapping to previous version v{existing_version_number}")
-            if previous_placeholder and previous_placeholder.id != existing_version.id:
+            update_push_progress(push, 'done', 100, f"Mapped to existing v{existing_version.version_number}")
+            if previous_placeholder and previous_placeholder.uid != existing_version.uid:
                 try:
                     previous_placeholder.delete()
-                    logger.info(f"Deleted placeholder version {previous_placeholder.id}")
                 except Exception as e:
                     logger.error(f"Error deleting placeholder: {e}")
-            return f"No changes detected - mapped to v{existing_version_number}"
+            return f"Mapped to v{existing_version.version_number}"
 
-        # CRITICAL FIX: Update version object with hash and basic info
+        # Calculate detailed changes
+        files_added, files_modified, files_deleted, size_change, change_details = compare_with_previous_version(manifest, previous_version)
+
+        # Update version
         version_obj.is_snapshot = is_snapshot
-        version_obj.hash = manifest_hash  # SAVE THE HASH!
+        version_obj.hash = manifest_hash
         version_obj.file_count = len(file_list)
-        version_obj.file_size = total_size  # SAVE FILE SIZE!
+        version_obj.file_size = total_size
         version_obj.created_at = timezone.now()
         version_obj.created_by = creator
+        version_obj.previous_version = previous_version
+        version_obj.files_added = files_added
+        version_obj.files_modified = files_modified
+        version_obj.files_deleted = files_deleted
+        version_obj.size_change = size_change
+        version_obj.change_details = change_details
+        version_obj.version_number = new_version_number
 
         if is_snapshot:
-            # Create full ZIP snapshot
-            update_push_progress(push, 'processing', 75, f"Creating full ZIP snapshot for v{new_version_number}...")
+            update_push_progress(push, 'processing', 75, f"Creating snapshot for v{new_version_number}...")
             
             try:
                 temp_zip_path, zip_size, zip_file_count = create_snapshot_zip(master_dir, version_obj)
                 
-                # Save ZIP to version
                 with open(temp_zip_path, 'rb') as f:
                     version_obj.file.save(f'snapshot.zip', File(f), save=False)
                 
                 version_obj.file_size = zip_size
                 version_obj.manifest_file_path = None
-                version_obj.save()  # Save all fields including hash and file_size
+                version_obj.save()
                 
-                # Clean up temp file
                 os.remove(temp_zip_path)
                 
-                update_push_progress(push, 'processing', 90, f"Snapshot v{new_version_number} created ({round(zip_size / 1024 / 1024, 2)} MB)")
+                update_push_progress(push, 'processing', 90, f"Snapshot v{new_version_number} created")
                 
             except Exception as e:
-                logger.error(f"Error creating snapshot: {e}")
+                logger.error(f"Snapshot creation failed: {e}")
                 raise
         else:
-            # Save CAS manifest to file
             update_push_progress(push, 'processing', 80, "Saving CAS manifest...")
             version_obj.file = None
-            version_obj.save()  # Save first with hash and file_size
+            version_obj.save()
             version_obj.save_manifest_to_file(manifest)
 
-        # Mark version as completed
+        # Mark completed
         version_obj.mark_completed()
 
         total_size_mb = round((version_obj.file_size or total_size) / (1024 * 1024), 2)
         storage_label = 'Snapshot' if is_snapshot else 'CAS'
 
+        # Build message with changes
+        change_msg = f"+{files_added}" if files_added > 0 else ""
+        if files_modified > 0:
+            change_msg += f", ~{files_modified}" if change_msg else f"~{files_modified}"
+        if files_deleted > 0:
+            change_msg += f", -{files_deleted}" if change_msg else f"-{files_deleted}"
+        
+        if not change_msg:
+            change_msg = "no changes"
+
         if is_snapshot:
-            message = f"{storage_label} v{new_version_number} created ({total_size_mb} MB)"
+            message = f"{storage_label} v{new_version_number} created ({total_size_mb} MB, {change_msg})"
         else:
-            message = f"{storage_label} v{new_version_number} created ({total_size_mb} MB, {cas_count} CAS, {inline_count} inline)"
+            message = f"{storage_label} v{new_version_number} created ({total_size_mb} MB, {cas_count} CAS, {inline_count} inline, {change_msg})"
 
         update_push_progress(push, 'done', 100, message)
         push.mark_completed()
 
-        logger.info(f"✓ Version v{new_version_number} completed successfully with hash {manifest_hash[:16]}...")
-        return f"Version v{new_version_number} created by {creator.username}"
+        logger.info(f"✓ Version v{new_version_number} completed")
+        return f"Version v{new_version_number} created"
 
     except PendingPush.DoesNotExist:
         return "PendingPush not found"
@@ -438,5 +548,5 @@ def process_pending_push_new(self, push_id):
                     pass
         except Exception:
             pass
-        logger.error(f"Error in process_pending_push_new: {str(e)}", exc_info=True)
+        logger.error(f"Error: {str(e)}", exc_info=True)
         return str(e)

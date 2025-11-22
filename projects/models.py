@@ -1,39 +1,35 @@
 # projects/models.py
 """
-Project and team management models
-Handles projects, team members, and permissions
+Project models with UUID support and proper security
 """
 
+import uuid
 from django.db import models
 from django.contrib.auth.models import User
 
 
 def sanitize_text(text):
-    """Remove null characters and other problematic characters from text"""
+    """Remove null characters"""
     if not text:
         return text
     return ''.join(char for char in text if ord(char) >= 32 or char in '\n\r\t')
 
 
 class Project(models.Model):
-    """
-    Project owned by a user with collaboration support
-    This is a NEW model that will eventually replace versioning.Project
-    """
+    """Project with UUID for secure access"""
+    uid = models.CharField(max_length=16, unique=True, db_index=True, editable=False)
+    
     owner = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='owned_projects_new'  # Different related_name to avoid conflict
+        related_name='owned_projects_new'
     )
     name = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     description = models.TextField(null=True, blank=True)
     
-    # Collaboration settings
     require_push_approval = models.BooleanField(default=False)
-    
-    # Ignore patterns (stored as JSON array)
     ignore_patterns = models.JSONField(default=list, blank=True)
 
     class Meta:
@@ -42,33 +38,39 @@ class Project(models.Model):
         verbose_name = 'Project (New)'
         verbose_name_plural = 'Projects (New)'
         db_table = 'projects_project'
+        indexes = [
+            models.Index(fields=['uid']),
+            models.Index(fields=['owner', '-updated_at']),
+        ]
 
-    def __str__(self):
-        return f"{self.owner.username}/{self.name} (New)"
-    
     def save(self, *args, **kwargs):
+        if not self.uid:
+            self.uid = uuid.uuid4().hex[:16]
         if self.description:
             self.description = sanitize_text(self.description)
         if self.name:
             self.name = sanitize_text(self.name)
         super().save(*args, **kwargs)
     
+    def __str__(self):
+        return f"{self.owner.username}/{self.name} (UID:{self.uid[:8]})"
+    
     def get_version_count(self):
-        """Get total number of versions"""
-        return self.versions_new.count()
+        """Get total completed versions"""
+        return self.versions_new.filter(status='completed').count()
     
     def get_latest_version(self):
-        """Get the most recent version"""
-        return self.versions_new.order_by('-created_at').first()
+        """Get most recent completed version"""
+        return self.versions_new.filter(status='completed').order_by('-created_at').first()
     
     def has_active_push(self):
-        """Check if there are any active pushes"""
+        """Check for active pushes"""
         return self.pushes_new.filter(
-            status__in=['pending', 'processing', 'zipping', 'comparing', 'awaiting_approval']
+            status__in=['pending', 'processing', 'awaiting_approval']
         ).exists()
     
     def get_user_role(self, user):
-        """Get the role of a user in this project"""
+        """Get user role in project"""
         if user == self.owner:
             return 'owner'
         
@@ -78,24 +80,21 @@ class Project(models.Model):
         return None
     
     def user_can_edit(self, user):
-        """Check if user has edit permission"""
+        """Check edit permission"""
         role = self.get_user_role(user)
         return role in ['owner', 'coproducer']
     
     def user_can_view(self, user):
-        """Check if user has view permission"""
+        """Check view permission"""
         role = self.get_user_role(user)
         return role in ['owner', 'coproducer', 'client']
 
 
 class ProjectMember(models.Model):
-    """
-    Project team members with roles
-    This is a NEW model that will eventually replace versioning.ProjectMember
-    """
+    """Project member with roles"""
     ROLE_CHOICES = [
-        ('coproducer', 'Co-Producer'),  # Can edit and push
-        ('client', 'Client'),  # View only
+        ('coproducer', 'Co-Producer'),
+        ('client', 'Client'),
     ]
     
     project = models.ForeignKey(

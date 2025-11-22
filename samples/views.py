@@ -47,7 +47,7 @@ def sanitize_dict(data):
 
 class SampleBasketView(APIView):
     """Manage project sample basket"""
-    authentication_classes = [JWTAuthentication]
+    
     permission_classes = [IsAuthenticated, CanViewProject]
     parser_classes = [MultiPartParser, FormParser, JSONParser]
     
@@ -110,7 +110,7 @@ class SampleBasketView(APIView):
 
 class SampleDetailView(APIView):
     """Get, update, or delete a sample"""
-    authentication_classes = [JWTAuthentication]
+    
     permission_classes = [IsAuthenticated]
     
     def get(self, request, sample_id):

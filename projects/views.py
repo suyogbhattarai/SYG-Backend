@@ -1,6 +1,6 @@
 # projects/views.py
 """
-Project and team management views
+Project views with UID support and secure 404 responses
 """
 
 import os
@@ -14,6 +14,7 @@ from django.db.models import Q
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.db import transaction
+from django.http import Http404
 
 from .models import Project, ProjectMember
 from .serializers import (
@@ -24,18 +25,17 @@ from .serializers import (
     ProjectMemberSerializer,
     ProjectStatusSerializer
 )
-from .permissions import IsProjectOwner, CanViewProject, CanEditProject
 
 
 def sanitize_string(s):
-    """Remove null characters and other problematic characters"""
+    """Remove null characters"""
     if not isinstance(s, str):
         return s
     return ''.join(char for char in s if ord(char) >= 32 or char in '\n\r\t')
 
 
 def sanitize_dict(data):
-    """Recursively sanitize all strings in a dictionary"""
+    """Recursively sanitize strings"""
     if isinstance(data, dict):
         return {k: sanitize_dict(v) for k, v in data.items()}
     elif isinstance(data, list):
@@ -46,6 +46,18 @@ def sanitize_dict(data):
         return data
 
 
+def get_project_or_404(uid_or_id, user):
+    """Get project by UID or return 404"""
+    try:
+        project = Project.objects.get(uid=uid_or_id)
+    except Project.DoesNotExist:
+        raise Http404("Project not found")
+    
+    # Return 404 instead of 403 for security
+    if not project.user_can_view(user):
+        raise Http404("Project not found")
+    
+    return project
 
 
 # ============================================================================
@@ -53,14 +65,11 @@ def sanitize_dict(data):
 # ============================================================================
 
 class ProjectListCreateView(APIView):
-    """
-    GET: List all projects user has access to
-    POST: Create a new project
-    """
+    """List and create projects"""
     permission_classes = [IsAuthenticated]
     
     def get(self, request):
-        """List all projects for current user"""
+        """List all user's projects"""
         projects = Project.objects.filter(
             Q(owner=request.user) | Q(members_new__user=request.user)
         ).distinct().order_by('-updated_at')
@@ -73,7 +82,7 @@ class ProjectListCreateView(APIView):
         return Response(sanitize_dict(serializer.data))
     
     def post(self, request):
-        """Create a new project"""
+        """Create new project"""
         serializer = ProjectCreateSerializer(
             data=request.data,
             context={'request': request}
@@ -82,7 +91,6 @@ class ProjectListCreateView(APIView):
         if serializer.is_valid():
             project = serializer.save(owner=request.user)
             
-            # Return full project details
             response_serializer = ProjectSerializer(
                 project,
                 context={'request': request}
@@ -97,28 +105,23 @@ class ProjectListCreateView(APIView):
 
 
 class ProjectDetailView(APIView):
-    """Get, update, or delete a project"""
-    permission_classes = [IsAuthenticated, CanViewProject]
+    """Get, update, or delete project"""
+    permission_classes = [IsAuthenticated]
     
-    def get(self, request, project_id):
+    def get(self, request, project_uid):
         """Get project details"""
-        project = get_object_or_404(Project, id=project_id)
-        self.check_object_permissions(request, project)
+        project = get_project_or_404(project_uid, request.user)
         
         serializer = ProjectSerializer(project, context={'request': request})
         return Response(sanitize_dict(serializer.data))
     
-    def put(self, request, project_id):
-        """Update project settings"""
-        project = get_object_or_404(Project, id=project_id)
-        self.check_object_permissions(request, project)
+    def put(self, request, project_uid):
+        """Update project"""
+        project = get_project_or_404(project_uid, request.user)
         
         # Only owner can update
         if project.owner != request.user:
-            return Response(
-                {'error': 'Only project owner can update settings'},
-                status=status.HTTP_403_FORBIDDEN
-            )
+            raise Http404("Project not found")
         
         serializer = ProjectUpdateSerializer(
             project,
@@ -130,9 +133,6 @@ class ProjectDetailView(APIView):
         if serializer.is_valid():
             serializer.save()
             
-            # Log activity (will implement when activity app is created)
-            # ActivityLog.log(...)
-            
             response_serializer = ProjectSerializer(
                 project,
                 context={'request': request}
@@ -141,32 +141,20 @@ class ProjectDetailView(APIView):
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    def patch(self, request, project_id):
-        """Partial update project settings"""
-        return self.put(request, project_id)
+    def patch(self, request, project_uid):
+        """Partial update"""
+        return self.put(request, project_uid)
     
     @transaction.atomic
-    def delete(self, request, project_id):
-        """Delete a project and all associated files"""
-        project = get_object_or_404(Project, id=project_id)
+    def delete(self, request, project_uid):
+        """Delete project"""
+        project = get_project_or_404(project_uid, request.user)
         
         # Only owner can delete
         if project.owner != request.user:
-            return Response(
-                {'error': 'Only project owner can delete the project'},
-                status=status.HTTP_403_FORBIDDEN
-            )
+            raise Http404("Project not found")
         
         project_name = project.name
-        
-  
-        
-        # Delete the project (this will cascade to related models)
-        # The CASCADE setting on ForeignKeys will automatically delete:
-        # - ProjectMembers
-        # - Versions (which will trigger their delete methods)
-        # - PendingPushes
-        # - SampleBaskets (which will trigger their delete methods)
         project.delete()
         
         return Response({
@@ -175,17 +163,16 @@ class ProjectDetailView(APIView):
 
 
 # ============================================================================
-# TEAM MANAGEMENT ENDPOINTS
+# TEAM MANAGEMENT
 # ============================================================================
 
 class ProjectMembersView(APIView):
-    """Manage project team members"""
-    permission_classes = [IsAuthenticated, CanViewProject]
+    """Manage project members"""
+    permission_classes = [IsAuthenticated]
     
-    def get(self, request, project_id):
-        """Get all project members"""
-        project = get_object_or_404(Project, id=project_id)
-        self.check_object_permissions(request, project)
+    def get(self, request, project_uid):
+        """Get all members"""
+        project = get_project_or_404(project_uid, request.user)
         
         members = project.members_new.all()
         serializer = ProjectMemberSerializer(
@@ -195,16 +182,13 @@ class ProjectMembersView(APIView):
         )
         return Response(sanitize_dict(serializer.data))
     
-    def post(self, request, project_id):
-        """Add a new member to the project"""
-        project = get_object_or_404(Project, id=project_id)
+    def post(self, request, project_uid):
+        """Add member"""
+        project = get_project_or_404(project_uid, request.user)
         
         # Only owner can add members
         if project.owner != request.user:
-            return Response(
-                {'error': 'Only project owner can add members'},
-                status=status.HTTP_403_FORBIDDEN
-            )
+            raise Http404("Project not found")
         
         serializer = ProjectMemberSerializer(
             data=request.data,
@@ -215,17 +199,17 @@ class ProjectMembersView(APIView):
             user_id = serializer.validated_data['user_id']
             user = get_object_or_404(User, id=user_id)
             
-            # Check if user is already a member
+            # Check if already member
             if project.members_new.filter(user=user).exists():
                 return Response(
-                    {'error': 'User is already a member of this project'},
+                    {'error': 'User is already a member'},
                     status=status.HTTP_400_BAD_REQUEST
                 )
             
-            # Check if user is the owner
+            # Check if owner
             if user == project.owner:
                 return Response(
-                    {'error': 'Project owner is automatically a member'},
+                    {'error': 'Owner is automatically a member'},
                     status=status.HTTP_400_BAD_REQUEST
                 )
             
@@ -236,9 +220,6 @@ class ProjectMembersView(APIView):
                 role=serializer.validated_data['role'],
                 added_by=request.user
             )
-            
-            # Log activity (will implement when activity app is created)
-            # ActivityLog.log(...)
             
             response_serializer = ProjectMemberSerializer(
                 member,
@@ -253,19 +234,16 @@ class ProjectMembersView(APIView):
 
 
 class ProjectMemberDetailView(APIView):
-    """Update or remove a project member"""
+    """Update or remove member"""
     permission_classes = [IsAuthenticated]
     
-    def put(self, request, project_id, member_id):
+    def put(self, request, project_uid, member_id):
         """Update member role"""
-        project = get_object_or_404(Project, id=project_id)
+        project = get_project_or_404(project_uid, request.user)
         
-        # Only owner can update roles
+        # Only owner can update
         if project.owner != request.user:
-            return Response(
-                {'error': 'Only project owner can update member roles'},
-                status=status.HTTP_403_FORBIDDEN
-            )
+            raise Http404("Project not found")
         
         member = get_object_or_404(
             ProjectMember,
@@ -282,28 +260,21 @@ class ProjectMemberDetailView(APIView):
         
         if serializer.is_valid():
             serializer.save()
-            
-            # Log activity (will implement when activity app is created)
-            # ActivityLog.log(...)
-            
             return Response(sanitize_dict(serializer.data))
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    def patch(self, request, project_id, member_id):
-        """Partial update member role"""
-        return self.put(request, project_id, member_id)
+    def patch(self, request, project_uid, member_id):
+        """Partial update"""
+        return self.put(request, project_uid, member_id)
     
-    def delete(self, request, project_id, member_id):
-        """Remove member from project"""
-        project = get_object_or_404(Project, id=project_id)
+    def delete(self, request, project_uid, member_id):
+        """Remove member"""
+        project = get_project_or_404(project_uid, request.user)
         
-        # Only owner can remove members
+        # Only owner can remove
         if project.owner != request.user:
-            return Response(
-                {'error': 'Only project owner can remove members'},
-                status=status.HTTP_403_FORBIDDEN
-            )
+            raise Http404("Project not found")
         
         member = get_object_or_404(
             ProjectMember,
@@ -312,10 +283,6 @@ class ProjectMemberDetailView(APIView):
         )
         
         member_username = member.user.username
-        
-        # Log activity (will implement when activity app is created)
-        # ActivityLog.log(...)
-        
         member.delete()
         
         return Response({
@@ -328,11 +295,11 @@ class ProjectMemberDetailView(APIView):
 # ============================================================================
 
 class AllProjectsStatusView(APIView):
-    """Get status of all projects user has access to"""
+    """Get status of all projects"""
     permission_classes = [IsAuthenticated]
     
     def get(self, request):
-        """Get lightweight status for all projects"""
+        """Get lightweight status"""
         projects = Project.objects.filter(
             Q(owner=request.user) | Q(members_new__user=request.user)
         ).distinct().order_by('-updated_at')
@@ -344,3 +311,10 @@ class AllProjectsStatusView(APIView):
         )
         
         return Response(sanitize_dict(serializer.data))
+    
+class SimpleTestView(APIView):
+    authentication_classes = []
+    permission_classes = []
+    
+    def post(self, request):
+        return Response({'status': 'POST works!'})
