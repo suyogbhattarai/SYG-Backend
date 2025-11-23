@@ -1,6 +1,6 @@
 """
 versions/tasks.py
-FIXED: Detailed file change tracking with filenames
+VERIFIED FIX: Direct inline path construction to ensure correct format
 """
 
 import os
@@ -16,18 +16,58 @@ from django.conf import settings
 from django.utils import timezone
 from django.core.files.base import ContentFile
 from django.core.files import File
+from django.db import transaction
+
 from .models import (
-    PendingPush, 
-    Version, 
+    PendingPush,
+    Version,
     FileBlob,
-    get_project_master_path,
-    get_version_storage_path
+    BlobReference,
 )
 
 logger = logging.getLogger(__name__)
 
 CAS_SIZE_THRESHOLD = 1 * 1024 * 1024
 SNAPSHOT_INTERVAL = 10
+
+
+def sanitize_filename(name):
+    """Sanitize filename/folder name - remove problematic characters"""
+    if not name:
+        return 'unknown'
+    name = ''.join(char if char.isalnum() or char in '-_' else '_' for char in name)
+    return name[:50]
+
+
+def get_project_master_path_inline(project):
+    """
+    INLINE path construction - uses UUID ONLY (immune to name changes)
+    Returns: media/users/username_userid/projects/projectuid/master/
+    """
+    username = project.owner.username if project.owner else 'Unknown'
+    user_id = project.owner.id if project.owner else 0
+    
+    safe_username = sanitize_filename(username)
+    
+    path = os.path.join(
+        settings.MEDIA_ROOT,
+        'users',
+        f'{safe_username}_{user_id}',  # ← USERNAME_USERID format
+        'projects',
+        project.uid,  # ← UUID ONLY (no name prefix)
+        'master'
+    )
+    
+    print(f"\n{'='*80}")
+    print(f"[PATH DEBUG] Master path constructed:")
+    print(f"  Username: {username} (ID: {user_id})")
+    print(f"  Project: {project.name} (UID: {project.uid})")
+    print(f"  Using UUID-only folder (immune to name changes)")
+    print(f"  FINAL PATH: {path}")
+    print(f"{'='*80}\n")
+    
+    return path
+
 
 def compute_file_hash(file_path):
     """Compute SHA256 hash of a file"""
@@ -36,6 +76,7 @@ def compute_file_hash(file_path):
         for chunk in iter(lambda: f.read(8192), b""):
             sha256.update(chunk)
     return sha256.hexdigest()
+
 
 def compute_manifest_hash(manifest):
     """Compute hash of manifest for duplicate detection"""
@@ -52,6 +93,7 @@ def compute_manifest_hash(manifest):
     file_hashes.sort(key=lambda x: x['path'])
     manifest_str = json.dumps(file_hashes, sort_keys=True)
     return hashlib.sha256(manifest_str.encode()).hexdigest()
+
 
 def compare_with_previous_version(current_manifest, previous_version):
     """
@@ -113,7 +155,6 @@ def compare_with_previous_version(current_manifest, previous_version):
     modified_files = []
     deleted_files = []
     
-    # Check for added and modified files
     for path, current_file in current_files.items():
         if path not in prev_files:
             files_added += 1
@@ -137,7 +178,6 @@ def compare_with_previous_version(current_manifest, previous_version):
                     'new_hash': current_file.get('hash')
                 })
     
-    # Check for deleted files
     for path, prev_file in prev_files.items():
         if path not in current_files:
             files_deleted += 1
@@ -158,6 +198,7 @@ def compare_with_previous_version(current_manifest, previous_version):
     
     return files_added, files_modified, files_deleted, size_change, change_details
 
+
 def update_push_progress(push: PendingPush, status: str, progress: int, message: str = None):
     """Update push status and progress"""
     push.status = status
@@ -166,6 +207,7 @@ def update_push_progress(push: PendingPush, status: str, progress: int, message:
         push.message = message
     push.save()
     logger.info(f"Push {push.uid}: {status}, {progress}%, {message}")
+
 
 def should_ignore_file(rel_path, ignore_patterns):
     """Check if file should be ignored"""
@@ -179,9 +221,11 @@ def should_ignore_file(rel_path, ignore_patterns):
                 return True
     return False
 
+
 def should_create_snapshot(version_number):
     """Determine if snapshot should be created"""
     return version_number % SNAPSHOT_INTERVAL == 0
+
 
 def get_or_create_blob(file_path, file_hash):
     """Get or create blob for file"""
@@ -201,6 +245,7 @@ def get_or_create_blob(file_path, file_hash):
     blob = FileBlob(hash=file_hash, size=file_size, ref_count=0)
     blob.file.save(file_hash, ContentFile(file_content), save=True)
     return blob
+
 
 def create_cas_manifest(file_list, master_dir):
     """Create CAS manifest"""
@@ -261,6 +306,7 @@ def create_cas_manifest(file_list, master_dir):
     logger.info(f"Manifest: {cas_count} CAS, {inline_count} inline, total={total_size}")
     return manifest, total_size, cas_count, inline_count
 
+
 def create_snapshot_zip(master_dir, version_obj):
     """Create snapshot ZIP"""
     import tempfile
@@ -284,9 +330,10 @@ def create_snapshot_zip(master_dir, version_obj):
     
     return temp_zip.name, file_size, total_files
 
+
 @shared_task(bind=True)
 def process_pending_push_new(self, push_id):
-    """Process pending push with detailed change tracking"""
+    """Process pending push with detailed change tracking and blob references"""
     try:
         push = PendingPush.objects.select_related('project', 'created_by', 'version').get(id=push_id)
         project = push.project
@@ -340,8 +387,9 @@ def process_pending_push_new(self, push_id):
 
         update_push_progress(push, 'processing', 10, "Starting push process...")
 
-        # Setup master directory
-        master_dir = get_project_master_path(project.owner.username, project.name)
+        # CRITICAL: Use inline function that constructs path directly
+        master_dir = get_project_master_path_inline(project)
+        
         os.makedirs(master_dir, exist_ok=True)
         update_push_progress(push, 'processing', 15, "Using project master directory")
 
@@ -425,13 +473,13 @@ def process_pending_push_new(self, push_id):
 
         # Get previous version
         previous_version = Version.objects.filter(
-            project=project, 
+            project=project,
             status='completed'
         ).exclude(uid=version_obj.uid if version_obj else None).order_by('-created_at').first()
 
         # Determine version number
         completed_versions = Version.objects.filter(
-            project=project, 
+            project=project,
             status='completed'
         ).exclude(uid=version_obj.uid if version_obj else None)
         new_version_number = completed_versions.count() + 1
@@ -446,8 +494,8 @@ def process_pending_push_new(self, push_id):
 
         # Check for duplicate
         existing_version = Version.objects.filter(
-            project=project, 
-            hash=manifest_hash, 
+            project=project,
+            hash=manifest_hash,
             status='completed'
         ).exclude(uid=version_obj.uid if version_obj else None).first()
         
@@ -507,6 +555,30 @@ def process_pending_push_new(self, push_id):
             version_obj.file = None
             version_obj.save()
             version_obj.save_manifest_to_file(manifest)
+            
+            # Create blob references
+            username = project.owner.username if project.owner else 'Unknown'
+            user_id = project.owner.id if project.owner else 'N/A'
+            project_name = project.name
+            project_uid = project.uid[:8]
+            
+            with transaction.atomic():
+                for file_entry in manifest.get('files', []):
+                    if file_entry.get('storage') == 'cas':
+                        blob_id = file_entry.get('blob_id')
+                        if blob_id:
+                            try:
+                                blob = FileBlob.objects.get(id=blob_id)
+                                BlobReference.objects.get_or_create(
+                                    blob=blob,
+                                    project=project,
+                                    version=version_obj
+                                )
+                                print(f"[BLOB] Created reference: blob {blob.hash[:16]}... -> {username}_{user_id}:{project_name}_{project_uid} v{new_version_number}")
+                            except FileBlob.DoesNotExist:
+                                logger.warning(f"Blob {blob_id} not found when creating reference")
+                            except Exception as e:
+                                logger.error(f"Error creating blob reference: {e}")
 
         # Mark completed
         version_obj.mark_completed()
@@ -549,4 +621,6 @@ def process_pending_push_new(self, push_id):
         except Exception:
             pass
         logger.error(f"Error: {str(e)}", exc_info=True)
+        import traceback
+        traceback.print_exc()
         return str(e)

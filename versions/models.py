@@ -1,13 +1,14 @@
 """
 versions/models.py
-FIXED: Version folder naming, UUIDs, detailed change tracking, and blob cleanup
+FINAL FIX: Use UUID-only for project folders (immune to name changes)
+Path format: media/users/username_userid/projects/projectuid/
 """
 
 import os
 import shutil
 import json
 import uuid
-from django.db import models
+from django.db import models, transaction
 from django.contrib.auth.models import User
 from django.db.models.signals import pre_delete, post_delete
 from django.dispatch import receiver
@@ -22,33 +23,63 @@ def sanitize_text(text):
     return ''.join(char for char in text if ord(char) >= 32 or char in '\n\r\t')
 
 
-def get_user_storage_path(username):
-    """Get base storage path for a user"""
-    return os.path.join(settings.MEDIA_ROOT, 'users', username)
+def sanitize_filename(name):
+    """Sanitize filename/folder name - remove problematic characters"""
+    if not name:
+        return 'unknown'
+    name = ''.join(char if char.isalnum() or char in '-_' else '_' for char in name)
+    return name[:50]
 
 
-def get_project_storage_path(username, project_name):
-    """Get storage path for a project"""
-    return os.path.join(get_user_storage_path(username), 'projects', project_name)
+def get_user_storage_path(user_id, username):
+    """
+    Get base storage path for a user
+    Format: media/users/username_userid/
+    """
+    safe_username = sanitize_filename(username)
+    folder_name = f"{safe_username}_{user_id}"
+    return os.path.join(settings.MEDIA_ROOT, 'users', folder_name)
 
 
-def get_project_master_path(username, project_name):
-    """Get master directory path for project files"""
-    return os.path.join(get_project_storage_path(username, project_name), 'master')
-
-
-def get_version_storage_path(username, project_name, version_number):
-    """Get storage path for a specific version using version_number"""
+def get_project_storage_path(user_id, username, project_id, project_name, project_uid):
+    """
+    Get storage path for a project using UUID ONLY
+    Format: media/users/username_userid/projects/projectuid/
+    This is immune to project name changes!
+    """
     return os.path.join(
-        get_project_storage_path(username, project_name), 
-        'versions', 
+        get_user_storage_path(user_id, username),
+        'projects',
+        project_uid  # ← ONLY UUID, no name prefix
+    )
+
+
+def get_project_master_path(user_id, username, project_id, project_name, project_uid):
+    """
+    Get master directory path for project files
+    Returns: media/users/username_userid/projects/projectuid/master/
+    """
+    return os.path.join(
+        get_project_storage_path(user_id, username, project_id, project_name, project_uid),
+        'master'
+    )
+
+
+def get_version_storage_path(user_id, username, project_id, project_name, project_uid, version_number):
+    """
+    Get storage path for a specific version
+    Returns: media/users/username_userid/projects/projectuid/versions/vN/
+    """
+    return os.path.join(
+        get_project_storage_path(user_id, username, project_id, project_name, project_uid),
+        'versions',
         f'v{version_number}'
     )
 
 
-def get_manifest_path(username, project_name, version_number):
+def get_manifest_path(user_id, username, project_id, project_name, project_uid, version_number):
     """Get storage path for version manifest JSON file"""
-    version_dir = get_version_storage_path(username, project_name, version_number)
+    version_dir = get_version_storage_path(user_id, username, project_id, project_name, project_uid, version_number)
     return os.path.join(version_dir, 'manifest.json')
 
 
@@ -59,13 +90,19 @@ def blob_upload_path(instance, filename):
 
 
 def version_snapshot_path(instance, filename):
-    """Generate upload path for version snapshots using version_number"""
+    """
+    Generate upload path for version snapshots
+    Format: users/username_userid/projects/projectuid/versions/vN/snapshot.zip
+    """
     version_number = instance.version_number or 'temp'
+    project = instance.project
+    safe_username = sanitize_filename(project.owner.username)
+    
     return os.path.join(
         'users',
-        instance.project.owner.username,
+        f'{safe_username}_{project.owner.id}',
         'projects',
-        instance.project.name,
+        project.uid,  # ← UUID only
         'versions',
         f'v{version_number}',
         'snapshot.zip'
@@ -73,23 +110,69 @@ def version_snapshot_path(instance, filename):
 
 
 def download_zip_path(instance, filename):
-    """Generate upload path for download ZIPs"""
+    """
+    Generate upload path for download ZIPs
+    Format: users/username_userid/projects/projectuid/downloads/vN_download_uid.zip
+    """
     version_number = instance.version.version_number or 'unknown'
+    project = instance.version.project
+    safe_username = sanitize_filename(project.owner.username)
+    
     return os.path.join(
         'users',
-        instance.version.project.owner.username,
+        f'{safe_username}_{project.owner.id}',
         'projects',
-        instance.version.project.name,
+        project.uid,  # ← UUID only
         'downloads',
         f'v{version_number}_download_{instance.uid}.zip'
     )
+
+
+class BlobReference(models.Model):
+    """
+    Track which projects and versions reference each blob
+    Enables safe cleanup only when blob is not referenced by any active project
+    """
+    blob = models.ForeignKey(
+        'FileBlob',
+        on_delete=models.CASCADE,
+        related_name='references'
+    )
+    project = models.ForeignKey(
+        Project,
+        on_delete=models.CASCADE,
+        related_name='blob_references'
+    )
+    version = models.ForeignKey(
+        'Version',
+        on_delete=models.CASCADE,
+        related_name='blob_references'
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        unique_together = ['blob', 'project', 'version']
+        db_table = 'versions_blobreference'
+        indexes = [
+            models.Index(fields=['blob', 'project']),
+            models.Index(fields=['project']),
+            models.Index(fields=['blob']),
+        ]
+    
+    def __str__(self):
+        username = self.project.owner.username if self.project.owner else 'Unknown'
+        user_id = self.project.owner.id if self.project.owner else 'N/A'
+        project_name = self.project.name
+        project_uid = self.project.uid[:8]
+        version_num = self.version.version_number if self.version.version_number else f'#{self.version.id}'
+        return f"Blob {self.blob.hash[:8]}... -> {username}_{user_id}:{project_name} ({project_uid}) v{version_num}"
 
 
 class FileBlob(models.Model):
     """
     Content-addressable storage for file contents
     Files >1MB are stored here to enable deduplication
-    Automatically cleaned up when ref_count reaches 0
+    Automatically cleaned up when all references are removed
     """
     hash = models.CharField(max_length=64, unique=True, db_index=True)
     file = models.FileField(upload_to=blob_upload_path)
@@ -129,6 +212,15 @@ class FileBlob(models.Model):
         if self.ref_count <= 0:
             print(f"[BLOB CLEANUP] Deleting unused blob {self.hash[:16]}...")
             self.delete()
+    
+    def get_reference_count(self):
+        """Get count of actual references"""
+        return self.references.count()
+    
+    def is_referenced_by_other_projects(self, exclude_project=None):
+        """Check if blob is used by other projects"""
+        refs = self.references.exclude(project=exclude_project) if exclude_project else self.references.all()
+        return refs.exists()
 
 
 @receiver(pre_delete, sender=FileBlob)
@@ -151,7 +243,8 @@ def fileblob_pre_delete(sender, instance, **kwargs):
 
 class Version(models.Model):
     """
-    Version with UUID, proper folder naming, and detailed change tracking
+    Version with UUID and detailed change tracking
+    Storage paths use project UUID only (immune to name changes)
     """
     STATUS_CHOICES = [
         ('pending', 'Pending'),
@@ -175,17 +268,12 @@ class Version(models.Model):
     )
     commit_message = models.TextField(null=True, blank=True)
     
-    # Version numbering
     version_number = models.IntegerField(null=True, blank=True)
-    
-    # Version status
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     
-    # Storage strategy
     is_snapshot = models.BooleanField(default=False)
     file = models.FileField(upload_to=version_snapshot_path, null=True, blank=True)
     
-    # Manifest file path (relative to MEDIA_ROOT)
     manifest_file_path = models.CharField(max_length=500, null=True, blank=True)
     
     hash = models.CharField(max_length=64, null=True, blank=True)
@@ -194,13 +282,11 @@ class Version(models.Model):
     file_size = models.BigIntegerField(null=True, blank=True)
     file_count = models.IntegerField(default=0)
     
-    # File change tracking
     files_added = models.IntegerField(default=0)
     files_modified = models.IntegerField(default=0)
     files_deleted = models.IntegerField(default=0)
     size_change = models.BigIntegerField(default=0)
     
-    # Detailed change tracking (JSON)
     change_details = models.JSONField(default=dict, blank=True)
     
     previous_version = models.ForeignKey(
@@ -280,7 +366,6 @@ class Version(models.Model):
         self.status = 'completed'
         self.completed_at = timezone.now()
         
-        # Assign version number if not already assigned
         if not self.version_number:
             self.assign_version_number()
         
@@ -295,17 +380,29 @@ class Version(models.Model):
     
     def get_version_directory(self):
         """Get the storage directory for this version"""
+        project = self.project
+        username = project.owner.username if project.owner else 'Unknown'
+        user_id = project.owner.id if project.owner else 0
+        
         if self.version_number:
             return get_version_storage_path(
-                self.project.owner.username,
-                self.project.name,
+                user_id,
+                username,
+                project.id,
+                project.name,
+                project.uid,
                 self.version_number
             )
+        
         # Fallback for temp versions
+        safe_username = sanitize_filename(username)
         return os.path.join(
             get_project_storage_path(
-                self.project.owner.username,
-                self.project.name
+                user_id,
+                username,
+                project.id,
+                project.name,
+                project.uid
             ),
             'versions',
             f'temp_{self.uid}'
@@ -382,7 +479,6 @@ def version_pre_delete(sender, instance, **kwargs):
     """Clean up version files and decrement blob references"""
     print(f"\n[VERSION CLEANUP] Starting cleanup for version {instance.uid}")
     
-    # Delete snapshot file
     if instance.file and instance.is_snapshot:
         try:
             file_path = instance.file.path
@@ -392,27 +488,34 @@ def version_pre_delete(sender, instance, **kwargs):
         except Exception as e:
             print(f"[VERSION ERROR] Snapshot deletion failed: {e}")
     
-    # Decrement blob references for CAS versions
     manifest = instance.load_manifest_from_file()
     if manifest and isinstance(manifest, dict):
         files = manifest.get('files', [])
-        blob_ids = set()
         
         for file_info in files:
             if file_info.get('storage') == 'cas':
                 blob_id = file_info.get('blob_id')
                 if blob_id:
-                    blob_ids.add(blob_id)
-        
-        print(f"[VERSION] Decrementing references for {len(blob_ids)} blobs")
-        
-        for blob_id in blob_ids:
-            try:
-                blob = FileBlob.objects.get(id=blob_id)
-                blob.decrement_ref()
-                print(f"[BLOB] Decremented ref for blob {blob.hash[:16]}... (refs: {blob.ref_count})")
-            except FileBlob.DoesNotExist:
-                print(f"[BLOB WARNING] Blob {blob_id} not found")
+                    try:
+                        blob = FileBlob.objects.get(id=blob_id)
+                        
+                        BlobReference.objects.filter(
+                            blob=blob,
+                            version=instance
+                        ).delete()
+                        
+                        print(f"[BLOB] Removed reference for blob {blob.hash[:16]}...")
+                        
+                        if not blob.is_referenced_by_other_projects():
+                            blob.decrement_ref()
+                            print(f"[BLOB] Decremented ref for blob {blob.hash[:16]}... (refs: {blob.ref_count})")
+                        else:
+                            print(f"[BLOB] Blob {blob.hash[:16]}... still referenced by other projects, keeping it")
+                    
+                    except FileBlob.DoesNotExist:
+                        print(f"[BLOB WARNING] Blob {blob_id} not found")
+                    except Exception as e:
+                        print(f"[BLOB ERROR] Error handling blob reference: {e}")
 
 
 @receiver(post_delete, sender=Version)
@@ -430,7 +533,6 @@ def version_post_delete(sender, instance, **kwargs):
                 print(f"[VERSION] Removed empty versions directory")
     except Exception as e:
         print(f"[VERSION ERROR] Directory cleanup failed: {e}")
-
 
 class DownloadRequest(models.Model):
     """Download request with UUID and expiration"""

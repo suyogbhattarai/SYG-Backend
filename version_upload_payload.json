@@ -3,714 +3,559 @@
   "commit_message": "Initial version from FL Studio",
   "file_list": [
     {
-      "relative_path": "Project_1.flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Project_1.flp",
-      "hash": "5dda3ec55c2cab1e5e2a79a5efb81f00afbce1ab8f5ff9a97cd5cc8bd663126d"
+      "relative_path": "indie pop rock happy.flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\indie pop rock happy.flp",
+      "hash": "c575ca0bce3be38b0cb8913c1a9e105263aadf2b0265275cb581bd96eb699289"
     },
     {
-      "relative_path": "Project_1.wav",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Project_1.wav",
-      "hash": "968c5981c3211df50ece160107640e4286fbe236daf8068fd3069b61408e229b"
+      "relative_path": "indie pop rock happy.wav",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\indie pop rock happy.wav",
+      "hash": "5cc28171131e4771c401e3986fe56875aa9e728fb2f1267673fcc4bf4cf7b8c9"
     },
     {
-      "relative_path": "Test  for dawlogger.wav",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Test  for dawlogger.wav",
-      "hash": "86f7576298e8a25e852acadc29c7a4f1cbcb14af3ccd6f730118127a76c70e05"
+      "relative_path": "Audio/indie pop rock happy_2025-02-18 22-07-33_REC.wav",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Audio\\indie pop rock happy_2025-02-18 22-07-33_REC.wav",
+      "hash": "bfcb0a428a22735899f8fb760371fa228e959cc3994b32d42daad9ebc47db8e7"
     },
     {
-      "relative_path": "Audio/Project_1_2024-11-15 19-15-37_REC.wav",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Audio\\Project_1_2024-11-15 19-15-37_REC.wav",
-      "hash": "2c6ed3fde4d2b93d2ccb2443c196081f70909d9ea973cc37c243e9471a826b99"
+      "relative_path": "Audio/indie pop rock happy_2025-02-18 22-08-24_REC.wav",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Audio\\indie pop rock happy_2025-02-18 22-08-24_REC.wav",
+      "hash": "6d9aa205d2300cceaab20ddda2ed8da081a80743e6b9d989d651af086a232e43"
     },
     {
-      "relative_path": "Audio/Project_1_2025-02-17 15-47-09_REC.wav",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Audio\\Project_1_2025-02-17 15-47-09_REC.wav",
-      "hash": "e4ccabf235c038160cd5dbe549e69257f8bfc39b3e0cb7a20bd6c6051ee4907f"
+      "relative_path": "Audio/indie pop rock happy_2025-02-18 22-14-01_REC.wav",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Audio\\indie pop rock happy_2025-02-18 22-14-01_REC.wav",
+      "hash": "193f4485e68a202bf868e02460d535f5e96e7dd2b34aff3bab334dd4de3e7361"
     },
     {
-      "relative_path": "Audio/Project_1_2025-02-17 15-47-21_REC.wav",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Audio\\Project_1_2025-02-17 15-47-21_REC.wav",
-      "hash": "fac03bbdba9a169dffb930b1c457871081c2f72ee5a9c3be33ae49817a4eccfb"
+      "relative_path": "Audio/indie pop rock happy_2025-02-18 22-14-22_REC.wav",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Audio\\indie pop rock happy_2025-02-18 22-14-22_REC.wav",
+      "hash": "8d3d369918689223843f8326cc330bb6115b8025fa5dbecddf31985563195efd"
     },
     {
-      "relative_path": "Audio/Project_1_2025-02-17 15-47-35_REC.wav",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Audio\\Project_1_2025-02-17 15-47-35_REC.wav",
-      "hash": "a8cb47dd4a2b7643584da37ce30d93790408a191b8aaf8706b1939a6fb70870b"
+      "relative_path": "Audio/indie pop rock happy_2025-02-18 22-14-43_REC.wav",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Audio\\indie pop rock happy_2025-02-18 22-14-43_REC.wav",
+      "hash": "351c765e4672de1051311b56332f2e542adc6c65533a25bff61fedd14089bfba"
     },
     {
-      "relative_path": "Audio/Project_1_2025-02-17 15-51-34_REC.wav",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Audio\\Project_1_2025-02-17 15-51-34_REC.wav",
-      "hash": "d8b7b43de43c57022d05763cc37b05ea78b45671049e1f4b58f54795c8a8ec00"
+      "relative_path": "Audio/indie pop rock happy_2025-02-18 22-16-48_REC.wav",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Audio\\indie pop rock happy_2025-02-18 22-16-48_REC.wav",
+      "hash": "44fc5d669ea660b24d7b66edb5de0583cff36f2ba2f71cf5d26d406df5aa82d7"
     },
     {
-      "relative_path": "Audio/Project_1_2025-02-17 15-51-44_REC.wav",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Audio\\Project_1_2025-02-17 15-51-44_REC.wav",
-      "hash": "44a8653601d67c0585e90feb920eb9d9274d3b07997025a6ef4756e4e3588695"
+      "relative_path": "Audio/indie pop rock happy_2025-02-18 22-17-05_REC.wav",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Audio\\indie pop rock happy_2025-02-18 22-17-05_REC.wav",
+      "hash": "78df05e7cf8eeebb2b5c8627f9b729bc9884501b3345cfc4ede2925e114033fa"
     },
     {
-      "relative_path": "Audio/Project_1_2025-02-17 15-52-11_REC.wav",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Audio\\Project_1_2025-02-17 15-52-11_REC.wav",
-      "hash": "4aafcdadacb3b4e9fa5780623bf933d80ee882c46934528506f7303e1c881b90"
+      "relative_path": "Audio/indie pop rock happy_2025-02-18 22-17-25_REC.wav",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Audio\\indie pop rock happy_2025-02-18 22-17-25_REC.wav",
+      "hash": "ffc620f662838968700b1fa82361c0eea948a525f578732c9433596d18091a7f"
     },
     {
-      "relative_path": "Audio/Project_1_2025-02-17 15-52-25_REC.wav",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Audio\\Project_1_2025-02-17 15-52-25_REC.wav",
-      "hash": "7d452db5da21835de453aaaf64877a123fda36246b83e18c726074c82b737322"
+      "relative_path": "Audio/indie pop rock happy_2025-02-18 22-18-14_REC.wav",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Audio\\indie pop rock happy_2025-02-18 22-18-14_REC.wav",
+      "hash": "f707596b31ecb67428dbc9bbcc9460e2b484415cc641af025bb611391df34f7a"
     },
     {
-      "relative_path": "Audio/Project_1_2025-02-17 15-52-34_REC.wav",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Audio\\Project_1_2025-02-17 15-52-34_REC.wav",
-      "hash": "f754c70ff8bc0bba13c0e5a1b4a36ef2a191b47c1d5185fe584d9228b25f2ed4"
+      "relative_path": "Backup/indie pop rock happy (autosaved at 12h02).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (autosaved at 12h02).flp",
+      "hash": "6d80c9003b5df642dd32222d96b8aa3e71cfe8fbb6dcfaf43f5a12fafd83a37d"
     },
     {
-      "relative_path": "Audio/Project_1_2025-02-17 15-52-55_REC.wav",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Audio\\Project_1_2025-02-17 15-52-55_REC.wav",
-      "hash": "48419b162c004e7fece36d3207e9887a9fc3d4e638049afbe1895a80a69b80d7"
+      "relative_path": "Backup/indie pop rock happy (autosaved at 14h39).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (autosaved at 14h39).flp",
+      "hash": "a160f64b7d3c963f3c45e1b348d7693f91abd1ded90b7be94d4d0626dd7e0e66"
     },
     {
-      "relative_path": "Audio/Project_1_2025-02-17 15-53-02_REC.wav",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Audio\\Project_1_2025-02-17 15-53-02_REC.wav",
-      "hash": "b70e5b55b1a70f59ba960b9d7e99cb666d6063c83220f0d6f9fdbd89d7317a8d"
+      "relative_path": "Backup/indie pop rock happy (autosaved at 15h07).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (autosaved at 15h07).flp",
+      "hash": "a7061d1522cdc7ae98555112ef3b09abe39f56341b07af5643db6412eba30a29"
     },
     {
-      "relative_path": "Audio/Project_1_2025-02-17 16-11-56_REC.wav",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Audio\\Project_1_2025-02-17 16-11-56_REC.wav",
-      "hash": "50dd616ab3c190baf06a14b62cff0f26f8b677d06180e5034827d491526ffc14"
+      "relative_path": "Backup/indie pop rock happy (autosaved at 15h22).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (autosaved at 15h22).flp",
+      "hash": "f6ffd0f97c9718b1a66e62cc70a0af732a2a2fe036f723af4c9cbf8bd8fdcf2e"
     },
     {
-      "relative_path": "Audio/Project_1_2025-02-17 16-12-21_REC.wav",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Audio\\Project_1_2025-02-17 16-12-21_REC.wav",
-      "hash": "76b05f75536bedadc8f403575dc1c25d4fc5fe9584f0c0fc1c28e02b13e4c4c0"
+      "relative_path": "Backup/indie pop rock happy (autosaved at 15h30).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (autosaved at 15h30).flp",
+      "hash": "158a460944cba8173e7f429be3c5a21e018a92c8889f5eaebcf57f833993fde1"
     },
     {
-      "relative_path": "Audio/Project_1_2025-02-17 16-16-22_REC.wav",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Audio\\Project_1_2025-02-17 16-16-22_REC.wav",
-      "hash": "7d93d0bd890410163f597e20bed5abbe554ed0fd3695ccd9665b86187c244b4b"
+      "relative_path": "Backup/indie pop rock happy (autosaved at 15h32).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (autosaved at 15h32).flp",
+      "hash": "5809821a5f2be1adbf2f380480102bc61b0d77bb2050dd434720c5d7a5971b25"
     },
     {
-      "relative_path": "Audio/Project_1_2025-02-17 16-17-07_REC.wav",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Audio\\Project_1_2025-02-17 16-17-07_REC.wav",
-      "hash": "ad1c1bcce934b80a557e752a1c3079615e1b18bbea2836594208c2d3fb51ed38"
+      "relative_path": "Backup/indie pop rock happy (autosaved at 18h51).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (autosaved at 18h51).flp",
+      "hash": "a0119be030a13d3369b3ffd8d5f248d7b38cdba48bbdfcdd73cc5b1fbf2291ec"
     },
     {
-      "relative_path": "Audio/Project_1_2025-02-17 16-17-43_REC.wav",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Audio\\Project_1_2025-02-17 16-17-43_REC.wav",
-      "hash": "223c6a6f7c7a20ef35877d06a4243114570c0cf25f91c7c00451b32d6991168b"
+      "relative_path": "Backup/indie pop rock happy (autosaved at 19h02).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (autosaved at 19h02).flp",
+      "hash": "6afab31c93b4f4cad16308aea44350fb707fd3fdc1e7ee8ea77d4b57507ce06a"
     },
     {
-      "relative_path": "Audio/Project_1_2025-02-17 16-20-11_REC.wav",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Audio\\Project_1_2025-02-17 16-20-11_REC.wav",
-      "hash": "1a69af012ab8754852b8f82795476ce4356e0f6ec7f8b7d22396fd18932bb12e"
+      "relative_path": "Backup/indie pop rock happy (autosaved at 21h39).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (autosaved at 21h39).flp",
+      "hash": "51a97bd7732cd2371b1f6ddfa5d6c1b1941178dab91aa7b2c866a6052f55f733"
     },
     {
-      "relative_path": "Audio/Project_1_2025-02-17 16-20-21_REC.wav",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Audio\\Project_1_2025-02-17 16-20-21_REC.wav",
-      "hash": "fb8421ad6cebc25b45300a0659106fe867126f71953a9ca18afae6f82147e4cf"
+      "relative_path": "Backup/indie pop rock happy (autosaved at 9h42).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (autosaved at 9h42).flp",
+      "hash": "a1a1912668429ef432957b088af249a66d8482f1abe9e95dfcbe3e6019f70f4c"
     },
     {
-      "relative_path": "Audio/Project_1_2025-02-17 16-20-30_REC.wav",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Audio\\Project_1_2025-02-17 16-20-30_REC.wav",
-      "hash": "5b54cd3c4483965b5c3c66ef57fc9e754f6e3bb089d5c0906f8ae81d1a829747"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 10h06).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 10h06).flp",
+      "hash": "1c5564f8d9cabfb7225c6a96cc2c43c6460533e8919764079135984bb8293a66"
     },
     {
-      "relative_path": "Audio/Project_1_2025-02-17 16-20-54_REC.wav",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Audio\\Project_1_2025-02-17 16-20-54_REC.wav",
-      "hash": "2ac5789ab9dca4fa2790db1370d7b6fbb2759e201b4ff1332486caaebf560716"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 10h08).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 10h08).flp",
+      "hash": "5db600165af2fa6fdf0960e9d8a5cf425a659babc68126f2cd78ab0420c4bd5d"
     },
     {
-      "relative_path": "Audio/Project_1_2025-02-17 16-21-07_REC.wav",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Audio\\Project_1_2025-02-17 16-21-07_REC.wav",
-      "hash": "7bed4a31315279c682d4b537b55e5aec1e923ff53db545fb71527f3fb5ea543b"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 10h08)_2.flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 10h08)_2.flp",
+      "hash": "0a07ad0278d1b34e1af9347d65fc3f17f27133bb5581e740e00cfdcb96c56c05"
     },
     {
-      "relative_path": "Audio/Project_1_2025-02-17 16-23-39_REC.wav",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Audio\\Project_1_2025-02-17 16-23-39_REC.wav",
-      "hash": "da1ba6c3a2752b8dd16b7e2ab66b72342c0e923d741e8a61fb292054b3da6e9f"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 10h08)_3.flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 10h08)_3.flp",
+      "hash": "c0e407a922a70ea77349e4bfc23806197b9c4f91d9c845abb4f000d4bc7ff096"
     },
     {
-      "relative_path": "Audio/Project_1_2025-02-17 16-49-33_REC.wav",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Audio\\Project_1_2025-02-17 16-49-33_REC.wav",
-      "hash": "4111f17b83f369e88c792dfd27fbdf16cde1d20624a6a72f690f7b55113cd187"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 10h56).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 10h56).flp",
+      "hash": "624ea42df14bd909750c93822c26999facda6170204e32df7acf2d3ed34b4544"
     },
     {
-      "relative_path": "Audio/Project_1_2025-02-17 16-50-04_REC.wav",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Audio\\Project_1_2025-02-17 16-50-04_REC.wav",
-      "hash": "bbcc82002f3aa3ab888b93b72923307a7ff5bbfef26526e40488803ae9a9509a"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 11h53).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 11h53).flp",
+      "hash": "01a6b99789b99e5e788a79dc0cb28b59fc04e7355dae9b970368e09b3124709f"
     },
     {
-      "relative_path": "Audio/Project_1_2025-02-17 16-50-18_REC.wav",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Audio\\Project_1_2025-02-17 16-50-18_REC.wav",
-      "hash": "a6b3ef9929fa1e2538e93a327784c42b94351e909cef53191671db3b6795e757"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 12h22).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 12h22).flp",
+      "hash": "619729b7dbf9a34a66fad6cfc087985b4010ef78088f0d93965db0898f6828ec"
     },
     {
-      "relative_path": "Audio/Project_1_2025-02-17 16-50-32_REC.wav",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Audio\\Project_1_2025-02-17 16-50-32_REC.wav",
-      "hash": "e71fa28354f45b484e7dd2becf03ddcbd0bd6f929ac6943ec5f40f4b889dcf8d"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 12h42).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 12h42).flp",
+      "hash": "c7e525e47d6be3117143d471d5e73adf8cdd3bb5158224242ce8b2b6470f2797"
     },
     {
-      "relative_path": "Audio/Project_1_2025-02-17 16-50-49_REC.wav",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Audio\\Project_1_2025-02-17 16-50-49_REC.wav",
-      "hash": "238284707759f9522084da9af2b9ff99475225feacd9cc635dbe60054d442eed"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 12h42)_2.flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 12h42)_2.flp",
+      "hash": "5bd160b522a203aa9a9b70a5e08cc7703ae643c52e7c6fe4a7185eb40e8322a1"
     },
     {
-      "relative_path": "Audio/Project_1_2025-02-17 16-51-09_REC.wav",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Audio\\Project_1_2025-02-17 16-51-09_REC.wav",
-      "hash": "dbe27f81597d62df0b5054468e4abc33202fcca7de8264f2fee0284ef4d2f48a"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 12h44).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 12h44).flp",
+      "hash": "16dceb347191d39870f3638c8ae7ed9b853ea33212853347cec27ddc1ed125b9"
     },
     {
-      "relative_path": "Audio/Project_1_2025-02-17 16-51-31_REC.wav",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Audio\\Project_1_2025-02-17 16-51-31_REC.wav",
-      "hash": "899319914a61ea7369f624b2463a6c8e20926ecabdcc16efe737ae1517de05f3"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 12h44)_2.flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 12h44)_2.flp",
+      "hash": "6f85ffbaff11fe1f5e5e2768bf8307682dfa8818379cf577f17a9f418f3cd99f"
     },
     {
-      "relative_path": "Audio/Project_1_2025-02-17 16-52-01_REC.wav",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Audio\\Project_1_2025-02-17 16-52-01_REC.wav",
-      "hash": "d3c565bd28de0fc652248335d6ef314b22b420d1afe8bd69f3d849a8a5af23c7"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 12h45).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 12h45).flp",
+      "hash": "9e5f4d96e21ec5413be66921a843f96fc9c0a937cd5efe47a15a6ebec7c69f6a"
     },
     {
-      "relative_path": "Audio/Project_1_2025-02-17 16-52-15_REC.wav",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Audio\\Project_1_2025-02-17 16-52-15_REC.wav",
-      "hash": "49e55511aa1566d22d90383b1b3c88868dceb6322865979c1222512f530cb135"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 12h48).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 12h48).flp",
+      "hash": "0296f79ee1a32960eef389433a3e3f0575282193a5c3635688404cdce33bdce8"
     },
     {
-      "relative_path": "Audio/Project_1_2025-02-17 16-52-25_REC.wav",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Audio\\Project_1_2025-02-17 16-52-25_REC.wav",
-      "hash": "6525ca5e1a8f19f5635f6501c3ff707cf40b0c8f2c651e44f7ed016108935fbd"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 12h48)_2.flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 12h48)_2.flp",
+      "hash": "8113c259ef7cfd87191e93e84d0d2457429567ad617cccfffdc1ca50489d07ac"
     },
     {
-      "relative_path": "Audio/Project_1_2025-02-17 16-53-55_REC.wav",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Audio\\Project_1_2025-02-17 16-53-55_REC.wav",
-      "hash": "fc7f7e28b9b576ad149f4433a1ed3f0dd4a3e12999e037f47816d761c1adc68e"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 12h49).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 12h49).flp",
+      "hash": "5c1af8ab8e4ab2d0242a4a4b2f867afe933350b452fa506228f7d036b18cb32f"
     },
     {
-      "relative_path": "Audio/Project_1_2025-02-17 16-55-03_REC.wav",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Audio\\Project_1_2025-02-17 16-55-03_REC.wav",
-      "hash": "4ddcae81a8a2dc665371a156a1d4afdd9b8327666d1b4e2bd5171fe971a61df2"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 12h49)_2.flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 12h49)_2.flp",
+      "hash": "69ddc47d963b1d1d3e68b1cd8bc2d7361eda35602304fc041b037900ead7bd4e"
     },
     {
-      "relative_path": "Audio/Project_1_2025-02-17 16-55-29_REC.wav",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Audio\\Project_1_2025-02-17 16-55-29_REC.wav",
-      "hash": "ca16a9cfdd793296e7eee2824a1dacda20433487846a9bfef51fc0c9488fa25f"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 12h50).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 12h50).flp",
+      "hash": "9bc6d54e41d8cbfc4275684b0950718aef95b4d96045fa039d96b615be4f9b46"
     },
     {
-      "relative_path": "Audio/Project_1_2025-02-17 16-56-53_REC.wav",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Audio\\Project_1_2025-02-17 16-56-53_REC.wav",
-      "hash": "29fcfc3211340d0128b948bb0ba1c8f6ec82eedfa256b8cc4a78cd710dda1dcf"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 12h50)_2.flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 12h50)_2.flp",
+      "hash": "958ea80fc6dc9db02382dc6c81ce0e4b9641eda20c7b436e6ea0549e56a2ec41"
     },
     {
-      "relative_path": "Audio/Project_1_2025-02-17 16-57-13_REC.wav",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Audio\\Project_1_2025-02-17 16-57-13_REC.wav",
-      "hash": "ec69d814a589193b81d277a43b0e6af829a7d33e40503bd9480e023a078f45ac"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 12h52).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 12h52).flp",
+      "hash": "aaa31a46bd8e3c0f8d6dedb8ec28ebdfdc50323bfc81c16da17350bde336a470"
     },
     {
-      "relative_path": "Audio/Project_1_2025-02-17 17-02-27_REC.wav",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Audio\\Project_1_2025-02-17 17-02-27_REC.wav",
-      "hash": "e1aa9c6b7c1da2fe131aab30c7341f2f15e3c7c76ff256281ec194bd76af27fb"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 12h57).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 12h57).flp",
+      "hash": "c2c6c24dd660c11952182fb474535d4e133267c02b0764c10b2c0ec932b0ae7b"
     },
     {
-      "relative_path": "Audio/REC (consolidated).wav",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Audio\\REC (consolidated).wav",
-      "hash": "ede1dc9847b15fc587fd7d6ebc2ff7bbe3775fbb1fd4a9721893b5b98a2788dd"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 13h07).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 13h07).flp",
+      "hash": "0f5bc5ac08195904116bd8a0ce8311c0c2c264c64e02dab69d9ab7f465ad8900"
     },
     {
-      "relative_path": "Backup/Project_1 (autosaved at 15h42).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (autosaved at 15h42).flp",
-      "hash": "6c99fd83f7ad55bbb28f48494a8b913a965e28f2ad557e5336785f967e4e2efb"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 13h08).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 13h08).flp",
+      "hash": "a0985805c26aee1123fd33bdf6834c8f34555d711918772f9728d8d5fa0d5de5"
     },
     {
-      "relative_path": "Backup/Project_1 (autosaved at 15h51).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (autosaved at 15h51).flp",
-      "hash": "767ee9fefe82f36724ce6445633bba56392712d84f3fc73da6e4479490edca94"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 13h09).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 13h09).flp",
+      "hash": "4772e76edb9179243ddeffc0dc4416c5914eb8672d1f95add1aa23e6fc674396"
     },
     {
-      "relative_path": "Backup/Project_1 (autosaved at 15h51)_2.flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (autosaved at 15h51)_2.flp",
-      "hash": "9c1b906868e821832a67139fa56805ea049042addb5b1461ce18f22d0117b990"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 13h09)_2.flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 13h09)_2.flp",
+      "hash": "d6271f525772dba113aa1f7690106905dc1faafa21df262581b3e9dbd9f9c4b9"
     },
     {
-      "relative_path": "Backup/Project_1 (autosaved at 16h15).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (autosaved at 16h15).flp",
-      "hash": "c256ed93fce81e0bb5b3be5359b3907de4de74d0336063124771db77cbf1d43f"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 13h09)_3.flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 13h09)_3.flp",
+      "hash": "3078ee3d92e6a77e9aed8d577948681d6dbdf84323ad6b4c466fab83b460d284"
     },
     {
-      "relative_path": "Backup/Project_1 (autosaved at 16h15)_2.flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (autosaved at 16h15)_2.flp",
-      "hash": "738b604789394c5f30768ef3775aa75464065ec294c0d296302be2ca5b530bc1"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 13h09)_4.flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 13h09)_4.flp",
+      "hash": "f52384c1a0417adda857fb13c82bc472655ca474043a096dad55ec10c19e90d1"
     },
     {
-      "relative_path": "Backup/Project_1 (autosaved at 16h15)_3.flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (autosaved at 16h15)_3.flp",
-      "hash": "df25298e92ffed86391611db7dab0f5c956f1931f10f694afb74d67fc43cafa7"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 13h30).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 13h30).flp",
+      "hash": "e9c3e9d0f86a357a27df6fa074dd2cf909d3256fb4cf1cc3c876ebf0fd40f03f"
     },
     {
-      "relative_path": "Backup/Project_1 (autosaved at 16h25).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (autosaved at 16h25).flp",
-      "hash": "dcb65383ba035aa1faa1d8f8bb57fa26e84865e3cdb7cd03c29260c5328f98da"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 13h30)_2.flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 13h30)_2.flp",
+      "hash": "91daca810b567ec38846e29510feb4dd289fcfcd79c20da25f5c761647f30d68"
     },
     {
-      "relative_path": "Backup/Project_1 (autosaved at 16h37).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (autosaved at 16h37).flp",
-      "hash": "ad7f90c0a56940f51c0f69067c8987d5097ba43c36e22f6df576806feec61953"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 14h21).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 14h21).flp",
+      "hash": "5b322ee38481368b491ff44b1140e8bccbf75abf15b53b4029f47ab1f5a1ecd9"
     },
     {
-      "relative_path": "Backup/Project_1 (autosaved at 16h53).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (autosaved at 16h53).flp",
-      "hash": "75ea8755db568f3b8fbae56a3c9731510157ec32c18f4d7a201553dba7a4857c"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 14h21)_2.flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 14h21)_2.flp",
+      "hash": "637b468dfd5ed62b739d7ff6273eb13d60660e6e88af460c390339570b1895c4"
     },
     {
-      "relative_path": "Backup/Project_1 (autosaved at 19h12).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (autosaved at 19h12).flp",
-      "hash": "0c0eede0648188f8270fe1efc3b6c0ea1e2e5b0feb8339b844b67279b778cf36"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 14h21)_3.flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 14h21)_3.flp",
+      "hash": "f21cbd440b8290d86d1d2c65645c00ccdc825fe4cf061a2219b35cf18e21ef62"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 10h37).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 10h37).flp",
-      "hash": "dfee4fcd6ea9ed8d9ea3eae5153998cea3a6132a73cca01e21d48b59a3411c70"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 14h41).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 14h41).flp",
+      "hash": "5488a84683516a1b77e9d37e378ac4c31c6ea71047c93d5715247d21ccd988a4"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 10h37)_2.flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 10h37)_2.flp",
-      "hash": "6ba4f227deda87cd208a6484e2b284b78da4bf487836c726ee5f1626c153d644"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 14h46).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 14h46).flp",
+      "hash": "60f72e8173326541dc159c19960070b50bbee5f195eb2e162a72c4ece84c887a"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 11h05).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 11h05).flp",
-      "hash": "d5f8a498e7aae16f9134ece6fc0bbe02e2be73411732c25b463e7ad0ab073072"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 14h47).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 14h47).flp",
+      "hash": "75f335ff055d12929c5e0270393d7b205a5614498fbf4509f44844851b39f823"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 11h06).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 11h06).flp",
-      "hash": "f57069aed2db495a0dd92d9748e7b8d30bfb0ef71c89a17d9875d6eff6945d96"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 14h48).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 14h48).flp",
+      "hash": "12e87e3f5f0b5250d1badadd8ec274442dedc0951e4d7d2bca368eb341c73614"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 11h44).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 11h44).flp",
-      "hash": "6da01f41585ad80bcd9d7014096af09e521dc6a8171f3dece11971281db6bf40"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 14h48)_2.flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 14h48)_2.flp",
+      "hash": "eb421c5557509f14f7e1829b5a550ccd3a3e14aa41f089f7e1baaa1738437df0"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 12h14).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 12h14).flp",
-      "hash": "d997061039fcd04d8398e4e0c2cb8b3c108a2d56c6c566f284a952874d1add10"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 14h48)_3.flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 14h48)_3.flp",
+      "hash": "9bf67be5b425cbdaea2773255d1ce293de27779df51e0d97e9404cf3422adbfd"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 12h15).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 12h15).flp",
-      "hash": "9e5bb241010f1b5e7d36816fed9824e9ceb5f04f30c50ce817806a7cdf8f35ad"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 14h50).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 14h50).flp",
+      "hash": "4468a3ee7165a5d51e61b06a0fd90df163684b851bb1bc69d4a0b29a7d6a3176"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 12h42).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 12h42).flp",
-      "hash": "c65eedf1dff9e45c0b8f76da94d9ef2f913dde6d4e437972720e06a426bbda3e"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 14h54).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 14h54).flp",
+      "hash": "ff0a205d56f1de2f96b50d61995f69b3d8af7e261fde8602b76e9e340ec0d0b0"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 12h42)_2.flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 12h42)_2.flp",
-      "hash": "64cc6f3e2e7d20d4eab3e94c6cb006973da7c4ab714057c508ffdc3742f06763"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 14h55).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 14h55).flp",
+      "hash": "de324918d4823011c38f7dbd6a485dfa178c3f5e2b83b87413dec5f6eff0529d"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 13h21).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 13h21).flp",
-      "hash": "2899fd5db6416d6e85315f49e0ef24f1e3a1f9c6e76119a1859f6ab5ddf28b83"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 14h56).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 14h56).flp",
+      "hash": "ecd1162c608f3c9402ac7b165c7a0a4c6b2c8e6055c1104b4ec9de739c944906"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 13h21)_2.flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 13h21)_2.flp",
-      "hash": "b96dc5c0eec3543f5c162aeb24bc99bfa4025dbc786201735197daf991593725"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 15h00).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 15h00).flp",
+      "hash": "4b6a75f72593329d04f8a96a0d67aa1087b4130534eca2734a6a8ae816f2c175"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 13h23).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 13h23).flp",
-      "hash": "20843c5ef1bcca2e9fb61a19090e9cf010f1e95e8ff559a5b8c13f888431fafd"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 15h12).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 15h12).flp",
+      "hash": "63d9787dd3f82adfb4991d4a9a6714ddec1159b4ce9d431c779a70f032af4eda"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 13h28).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 13h28).flp",
-      "hash": "c9bc3c0d1ee0058cdeb72d8e56453220ff4bc52adba5b058baaee54381979212"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 15h34).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 15h34).flp",
+      "hash": "bb869b619f248e014ecc08cfcb3e367f1cc1e348658b42908915e32c597fdc28"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 13h52).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 13h52).flp",
-      "hash": "ffaec09f95ed9f08966d5ca5d7b0a78281f962b95fc51dbf03b8649fb05b3943"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 15h46).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 15h46).flp",
+      "hash": "c4a7bf5ac9e2da23fb99bc990db7ab659bfe175f377cf1d7535571ac61b686be"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 13h53).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 13h53).flp",
-      "hash": "e619c6bac61a87ca34a040e82233427c43cf18bd24f7b4ae9cbf441cf9948469"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 15h56).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 15h56).flp",
+      "hash": "6024c11f9c5c7ce5623bb9130566e62730e5260a52de744b61e229e2f77710cc"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 13h54).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 13h54).flp",
-      "hash": "f5d81ed87ad12db03393ea2a20483d159790c1a2dee647c6bd9167efd300f247"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 17h28).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 17h28).flp",
+      "hash": "8db80e1665969162c6b4d051bf0fa9555c4a44adc79b78514b06bc4beec314e5"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 13h58).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 13h58).flp",
-      "hash": "2d81c02cdf2abcd1afc7d78c266cc024b378474eae3a7ec8e2862f01fbfc224b"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 17h28)_2.flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 17h28)_2.flp",
+      "hash": "57158a0a89a614588d0e017941e761dff7ccdbeaea67693811fc37b174292511"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 15h40).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 15h40).flp",
-      "hash": "dc71b32b3756ba11477184943fbc3bc23c2f9bcb3553404ace5ae558e06dbac4"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 17h28)_3.flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 17h28)_3.flp",
+      "hash": "7c51d1b1d550f163734f62d78ad9fce2909f4727cd89fcc029ef79168843a3c8"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 15h41).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 15h41).flp",
-      "hash": "2886acd2a4330dcf1e91ddc60881db7e9445fe2215dce767cba65fc90b89adf9"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 17h31).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 17h31).flp",
+      "hash": "61f25a65634b5ff4f1c39fdaea1ab01b368e9c536a4e3ca4cbc172549f827799"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 15h45).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 15h45).flp",
-      "hash": "8279cd10107f8dc8d11751b5305a7cb48a973b3491206ef95822ac6425a10f5b"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 18h06).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 18h06).flp",
+      "hash": "c1b47cf4f5b6dafb0a75796b8628ad538bea16445e10b0670671c90c53402578"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 15h46).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 15h46).flp",
-      "hash": "6c4b8829071758a16be1fd80f129e9d92b4235d609b9e895c13671dc6a55b838"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 18h06)_2.flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 18h06)_2.flp",
+      "hash": "0fe6077e269a866fd2921d62b5e196de91029af2dab5e7c6820688e6162aad15"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 15h46)_2.flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 15h46)_2.flp",
-      "hash": "a9b1e4b58ffb0ed356a9d57b01c6eee796d7263916e21654c8fd6527f012fdae"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 18h07).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 18h07).flp",
+      "hash": "8dfe92e72ae5d15419bdf4b6a779875e5a5371ba6dfa4a0b8ad97c56425f1965"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 15h46)_3.flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 15h46)_3.flp",
-      "hash": "b60d89e523c867c768a61f852198b76c39af18d835eb822bdb477563644b9b82"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 18h49).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 18h49).flp",
+      "hash": "6e1ebd463b7dd9e09cfc4e30d02090fc22ab2272178082b40048a7691c285271"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 15h48).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 15h48).flp",
-      "hash": "42d3b206da4c149fbb99859ca5606df56470eea4c13b289335d16e119bd693c4"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 19h42).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 19h42).flp",
+      "hash": "058ba3653760c19c40da8bcd44b5d715880c579863541d50454879703eeb7b97"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 15h49).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 15h49).flp",
-      "hash": "fc0f10e83c65a3d4f80abb31d5edab9a399dbd2cf6273871619262ac4cb5e9ff"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 19h43).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 19h43).flp",
+      "hash": "7b98f3c42bcc251784f82dec1849824404f8e6438751f128dadf30330056e3d9"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 15h49)_2.flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 15h49)_2.flp",
-      "hash": "e7bef7466b3560274853a334d22b6a2ec13708d401766ebcef6ffea0d2fd4ffa"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 19h43)_2.flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 19h43)_2.flp",
+      "hash": "4e6d11ed87366b65af82bcedd6a0f50b592af1ad9f9df51c6b0af796b50c0ca6"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 15h54).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 15h54).flp",
-      "hash": "fc8359141334c34e3c44129a7f6f3b381d536ad3ac3d196a3b81b4637b3b90c0"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 19h44).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 19h44).flp",
+      "hash": "ed0524d0baaa36255c477298651e0f993b68314ef05957c48b81f54c6f70e398"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 16h01).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 16h01).flp",
-      "hash": "a8ebfce2e5f0c64a689a1c281d846e26f6654db51df451210b1f9c2667a76971"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 19h45).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 19h45).flp",
+      "hash": "33878269c8dbf486cad9deae0b56f2a48d448caded887ce394e735472c136421"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 16h02).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 16h02).flp",
-      "hash": "ea1b267e2a1a29c373f9c00109891a8a0a0075e29c20fd79f49a8792774d783f"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 19h45)_2.flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 19h45)_2.flp",
+      "hash": "54487a2c43f2263ac57c74b9a888ab5b18271c080cb47d8973863b8a1d887b8c"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 16h06).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 16h06).flp",
-      "hash": "95c47ea72e43d384df5b905eb8580c6d2d5807ac970980360eab052797f93b6c"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 20h27).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 20h27).flp",
+      "hash": "985100e87c6700c61239a468989a43902697738349aaf31788358d84c63c3c61"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 16h08).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 16h08).flp",
-      "hash": "b423f43992d24dacd3a84ff1144ce4c85a28462f4511e46d7b0d3377b233e629"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 20h38).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 20h38).flp",
+      "hash": "40029cf281d42285d5864423d973a41fd630dce5296ccfb03a93c1e2edc9f1d9"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 16h08)_2.flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 16h08)_2.flp",
-      "hash": "aa6cb0ce3cb21c8d5f662465fd90d906281fc74961a88b5b385bc43fb07714d6"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 20h38)_2.flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 20h38)_2.flp",
+      "hash": "ce62f820cbfd7acf9328a24e86fa6f89933b82386bf431c26d283d4796004a61"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 16h09).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 16h09).flp",
-      "hash": "dfd05e1a011ef353bb0badb981701c5f2b6016e115d4a0310b02a60c05d029c4"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 20h52).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 20h52).flp",
+      "hash": "ddbdbabbba97b7a791778233aa7afc9b378ade886625545d2c9fdc33ab26f1d8"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 16h10).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 16h10).flp",
-      "hash": "873ad99a027447e4cf990bcd5ff13397d500871cadc33645f7dba2944c7953ce"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 21h26).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 21h26).flp",
+      "hash": "e0a49dcfb8749fba17b8daadc434585120e9daee260ca217e9353e751e2ceacb"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 16h11).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 16h11).flp",
-      "hash": "513f208180730da024569eb8db89090724ebc58f70be88f93e8ab743c896c1fa"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 21h26)_2.flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 21h26)_2.flp",
+      "hash": "685a23671281080d179fad3c5ec2f1e5bf047b8cc92712f7047d912b1b229a0e"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 16h37)_4.flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 16h37)_4.flp",
-      "hash": "6ebd59f65685267a0aad292a7d1c2ec1773e341090786315fd53bca015b82324"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 21h26)_3.flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 21h26)_3.flp",
+      "hash": "dc8513b95ddd333d8d7e75dda7b1e725648c42704f14bae86431488c3559109d"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 16h37)_5.flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 16h37)_5.flp",
-      "hash": "12b46912070eee0d27507397bad17bd03f56a7ac37f9411c9040e26bfcc5523a"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 21h26)_4.flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 21h26)_4.flp",
+      "hash": "c6b4b2d7dd4e9bf5b924e8d891e28b3178bf1f65200a077e911302c5b527d094"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 16h42)_2.flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 16h42)_2.flp",
-      "hash": "b20fa4b0a5008b52e4dc7be48ee8d00f2160968f7b0335e7ecf1ac52720f17dc"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 21h27).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 21h27).flp",
+      "hash": "e9728b70b85f5cf608d376830ce037b20e2afabaffbc71e1fd4ae1f8a368d718"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 16h42)_3.flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 16h42)_3.flp",
-      "hash": "acb9606a66d9368e10f25186fdb98fb12460f209bb22698405a2c44b83e00eb7"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 21h29).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 21h29).flp",
+      "hash": "60e7e436c61f46eb47ad1de0c94cbfb7428fcad1eec8ba9baac8c40a7337667f"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 16h46).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 16h46).flp",
-      "hash": "99d119e51c73d84317830e94589705714bbbeed837b24e277632d214838035e3"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 21h30).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 21h30).flp",
+      "hash": "135c114a8f801dc562d5b7e7431b4f07bbed2b751712cb3288a800c1a51ab77a"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 16h46)_10.flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 16h46)_10.flp",
-      "hash": "ff235dc6c148b5b0b223a482e0bb31941936ff370fcfe20c4b966f2465852ccd"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 21h34).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 21h34).flp",
+      "hash": "3beb34ff3f9dc690bc8fdc905d6d6496838b23c2ee6c5538544ee90e9afd774e"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 16h46)_2.flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 16h46)_2.flp",
-      "hash": "444a960968573115036ec65c112fa354fb102e33e7c1966bb3d02aa74119df7c"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 21h52).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 21h52).flp",
+      "hash": "6c0b57769415df56cfd376d2c58400fb1a899adffd33fdbbaf0bd58e0a5b540a"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 16h46)_3.flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 16h46)_3.flp",
-      "hash": "5ee5d8a3fe98008287f100ee60c7bd29b8a54e12cd0c8539681b8b0c2abbb7ba"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 21h53).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 21h53).flp",
+      "hash": "58b7b31f7a67f885f8745668d9d959444b88c24a2735fbcf7852dfe70d4d7a78"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 16h46)_4.flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 16h46)_4.flp",
-      "hash": "254d6d66217a908989db5652930515f4c45f77e5fe55cd68766317148ce3ce4d"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 21h53)_2.flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 21h53)_2.flp",
+      "hash": "88a4370b33ff008cac51c456f3b5814db4766e71f9d7c5a17f4fbcdd9dff13aa"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 16h46)_5.flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 16h46)_5.flp",
-      "hash": "b0ce55f869f6333a2926be37066d9d65a7b490e5e1d78fa633b816fc1476a902"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 21h56).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 21h56).flp",
+      "hash": "75a5ace2f170adc6431dc2de23e0bb45cae8593c7cd7e9aae10ebdda65d46d20"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 16h46)_6.flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 16h46)_6.flp",
-      "hash": "9bbf32b056a456bb49880279042b4cc0cf6a5ade9c7d9c2068e3834fa65b54c2"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 22h02).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 22h02).flp",
+      "hash": "7bd7aa7c72f6be24f00783043430d3cdd6bb67488bf665d93f8ed9d0a0793053"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 16h46)_7.flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 16h46)_7.flp",
-      "hash": "673d4652b0435e4424ba8c8c23fb3abeb265926bd2c865e7f7962189cb9b30bf"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 22h02)_2.flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 22h02)_2.flp",
+      "hash": "6055c121525e7f0bd3106b43c98f2e316e8a033e1d0b79c42299d23a514e74ac"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 16h46)_8.flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 16h46)_8.flp",
-      "hash": "3d52d943627701e617d82c85db3ddd3ed8eed0c77e3a8d582c2a15b97212579e"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 22h02)_3.flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 22h02)_3.flp",
+      "hash": "71c338d26f69acf8de34f8a57c9f09dded0fed93b3d94d9daf77b135bd939566"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 16h46)_9.flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 16h46)_9.flp",
-      "hash": "f48853626220d318e0f30613229144b1fd507e08a1691a48709c68b5eff28ff5"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 22h02)_4.flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 22h02)_4.flp",
+      "hash": "3abb9573dca0dfa7365ef29d438492963a42ff939db05e17a90e935070da63eb"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 16h52).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 16h52).flp",
-      "hash": "1760fd72ae03ec380b3f23b8e4bb0653fcfdab18cad99addaabd47216adaa09d"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 22h10).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 22h10).flp",
+      "hash": "99b135ddecdf45d45700b7917f7363867b69949925aea5f586dbf3ea6c85f39e"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 16h53).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 16h53).flp",
-      "hash": "0f5b53d849865a72060df730f4a3fbb9f6322b480ca70baf38a1fdec0b601062"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 22h13).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 22h13).flp",
+      "hash": "50c90d9e1f1eac8c6855aabe6a31e9b22192088c1ea7552bd292edab5ef142bf"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 16h53)_2.flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 16h53)_2.flp",
-      "hash": "ed299d3b74582f0ce70e0b83922943b2d07d81d6fdb57cd5da7903547c4b89b3"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 22h15).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 22h15).flp",
+      "hash": "b693647ef0d4e3067a8cd3f78f4ba08f9cdb6bcd4bdc257a853ad95d3479aacc"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 16h53)_3.flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 16h53)_3.flp",
-      "hash": "3999a8a99f62c1700eb616e521408e78b4c9ef42617be301b7e20b54a7438dd3"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 22h16).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 22h16).flp",
+      "hash": "f4de12ce0bd191408e7e3e78b03f9736211bc798ea8765fb2555e37dd8547b78"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 16h53)_4.flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 16h53)_4.flp",
-      "hash": "83221b4fcb5c75c9853fa903ea8a7032158eaee78ffa61c3761f5c42311c8fab"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 22h16)_2.flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 22h16)_2.flp",
+      "hash": "a6a1a2c173d5fcfd24769948ed540c1ff9ce9d9ffdc52a321a2ebf7054ae1e65"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 16h53)_5.flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 16h53)_5.flp",
-      "hash": "f9bcee2a6516a9f214165571c4f713bfcbd61ffaa0c8dcff96eb08c8c7358bb3"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 22h16)_3.flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 22h16)_3.flp",
+      "hash": "cf795a95bfcb6172ecacb4a6640062a26405c054292f77ab221c50960074803b"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 16h53)_6.flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 16h53)_6.flp",
-      "hash": "6c7bfbed2f824e38c4fb0db2bd6123e04c70244478b3e4cf2728523158cd7161"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 22h19).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 22h19).flp",
+      "hash": "bb43cf2f6ceee1d82763282ee5ef411db6a3bef3fb663cd70f8be390ed8b0937"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 16h53)_7.flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 16h53)_7.flp",
-      "hash": "5f52c739276bdf7ad5e91146ab55ebde194239fc0ef1e03dfeb10bc14e87c7e9"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 22h22).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 22h22).flp",
+      "hash": "fc6a5b3d7d4de0b7309cbdd0e42733a851ac590b237a8cdca4cb5154d29e7158"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 16h53)_8.flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 16h53)_8.flp",
-      "hash": "db82e3b734bf1e3768565b3762f7461f16181e0c251733637fbe100815ebab23"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 23h41).flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 23h41).flp",
+      "hash": "15eaea2b22141c0b8fb7850416778d509e26be1ffa5273bf74fd9c4724a9b839"
     },
     {
-      "relative_path": "Backup/Project_1 (overwritten at 16h53)_9.flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 16h53)_9.flp",
-      "hash": "d07476ea75475a91c3242b2349d83d61fa12e009543cbbe214b69d0c580c82a1"
-    },
-    {
-      "relative_path": "Backup/Project_1 (overwritten at 16h54).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 16h54).flp",
-      "hash": "fb67e49c225bd4aac1e27e6782d6b7dd4e045e52dfb9bccf73f52bcdb89d9de1"
-    },
-    {
-      "relative_path": "Backup/Project_1 (overwritten at 16h55).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 16h55).flp",
-      "hash": "7b715f3aa094d80fbf5622d77eeda1bfd90ed77d8b5da67ca496a05b03be425b"
-    },
-    {
-      "relative_path": "Backup/Project_1 (overwritten at 16h57).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 16h57).flp",
-      "hash": "47195ea11da6ea375df97b652913f4b28aab99b317f3255f5a6f614e71ee601d"
-    },
-    {
-      "relative_path": "Backup/Project_1 (overwritten at 16h58).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 16h58).flp",
-      "hash": "c5d1bb61959692d8f5b8b9bff776a69f8d71ab22d85579cae7cfae49e62733a1"
-    },
-    {
-      "relative_path": "Backup/Project_1 (overwritten at 16h59).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 16h59).flp",
-      "hash": "098728b3de712fe83d6228c0f32ec30e53314ac8a3f76f5a8ef7c079793bde81"
-    },
-    {
-      "relative_path": "Backup/Project_1 (overwritten at 17h02).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 17h02).flp",
-      "hash": "443d78e01b18bf2f3c4d0d9d6ad892151c6469475b943a0655caeddf11f1cb47"
-    },
-    {
-      "relative_path": "Backup/Project_1 (overwritten at 17h02)_2.flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 17h02)_2.flp",
-      "hash": "b2d4d87d14533e2c08d0c436fb1e97115fc6b4d74110c04839f168d3fcdc9d7f"
-    },
-    {
-      "relative_path": "Backup/Project_1 (overwritten at 17h03).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 17h03).flp",
-      "hash": "42e532667ab8063e7166125bc1d776dd0a9760a5e657d785f069c4fc4853d3b5"
-    },
-    {
-      "relative_path": "Backup/Project_1 (overwritten at 17h03)_2.flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 17h03)_2.flp",
-      "hash": "2e49f1c46978dff6c546cc4b7cc98f0202249e09cb241d546286f9826cdb385c"
-    },
-    {
-      "relative_path": "Backup/Project_1 (overwritten at 17h04).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 17h04).flp",
-      "hash": "b014b5a51cbe2f217d80882eecc3533689d575eb62030b6f007fd7be05bcc9e9"
-    },
-    {
-      "relative_path": "Backup/Project_1 (overwritten at 17h06).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 17h06).flp",
-      "hash": "779d9b1e48031394c04bf118639c5ce348d2ef93d95698117bacd06c051c8031"
-    },
-    {
-      "relative_path": "Backup/Project_1 (overwritten at 17h12).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 17h12).flp",
-      "hash": "a22d7714e42eb5034932465fbf9fce1bb5313b3bea569333055ed1b4f847bc3f"
-    },
-    {
-      "relative_path": "Backup/Project_1 (overwritten at 17h15).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 17h15).flp",
-      "hash": "ef536bfbb4d3681ad88a602f3955d4ec41857788c434f5d09e815be876eb6d12"
-    },
-    {
-      "relative_path": "Backup/Project_1 (overwritten at 17h18).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 17h18).flp",
-      "hash": "8d19738969d89d215b7f3399bb0df1ec44cd198e6807457779e4e1861e89aef9"
-    },
-    {
-      "relative_path": "Backup/Project_1 (overwritten at 17h18)_2.flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 17h18)_2.flp",
-      "hash": "bbc172caf9e1fa1da83ebe7bb00bcce98f6f80c4dd218f7f48bad7d25921d8a8"
-    },
-    {
-      "relative_path": "Backup/Project_1 (overwritten at 18h31).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 18h31).flp",
-      "hash": "9d0a7cc774b5d8fe0e060779d8f5e5e10cb581ddad5149144d54dd8f8c8eba3d"
-    },
-    {
-      "relative_path": "Backup/Project_1 (overwritten at 19h18).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 19h18).flp",
-      "hash": "a421b8ca2942a1e5db397df9601bfe37075b89f93db9b0edb8087cf2aeae9074"
-    },
-    {
-      "relative_path": "Backup/Project_1 (overwritten at 19h18)_2.flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 19h18)_2.flp",
-      "hash": "956be2d7d803e0f192be04e94518a8f85cb3fba656db2e5f75c47c515f05a600"
-    },
-    {
-      "relative_path": "Backup/Project_1 (overwritten at 19h22).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 19h22).flp",
-      "hash": "755cc170e91a3fbdf9582d24802fca15969923acba0299d733648cbb45a57064"
-    },
-    {
-      "relative_path": "Backup/Project_1 (overwritten at 19h24).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 19h24).flp",
-      "hash": "12d3dfc916c134c8d1bd0bae3cba3ffd22e21890463491a35524f35a0589c95b"
-    },
-    {
-      "relative_path": "Backup/Project_1 (overwritten at 21h08).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 21h08).flp",
-      "hash": "d8363c2a4f9e81a48c10823229089d9c08eb96210753cefc5b191bbbcc9b5684"
-    },
-    {
-      "relative_path": "Backup/Project_1 (overwritten at 21h08)_2.flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 21h08)_2.flp",
-      "hash": "394a46a6faec694b677ba27d5b00cf5eedea279830ae9ad10a799bc2015dd6f4"
-    },
-    {
-      "relative_path": "Backup/Project_1 (overwritten at 21h11).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 21h11).flp",
-      "hash": "2bd8f4373fe0e1e2b55f0546b216778b6cd9d8751320046fa38df788f0687a4f"
-    },
-    {
-      "relative_path": "Backup/Project_1 (overwritten at 21h11)_2.flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 21h11)_2.flp",
-      "hash": "e6c7d71c520fd08b437a5bffce7a1a4a02d82131af2a48975b877c26318488f2"
-    },
-    {
-      "relative_path": "Backup/Project_1 (overwritten at 21h12).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 21h12).flp",
-      "hash": "72c99e8b4f25e44fbe8ff5e86d497b3359db8ece48e78c6b043ed2429d6503db"
-    },
-    {
-      "relative_path": "Backup/Project_1 (overwritten at 21h12)_2.flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 21h12)_2.flp",
-      "hash": "9d35f213465bcbfaf715a70d708e0adc76adc2f9e7ddfca0641f7d371ee8e938"
-    },
-    {
-      "relative_path": "Backup/Project_1 (overwritten at 21h12)_3.flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 21h12)_3.flp",
-      "hash": "46ada017dc1fea96ca24618f1491bb07dec6f15e7a03327d816dd6ef26784e24"
-    },
-    {
-      "relative_path": "Backup/Project_1 (overwritten at 21h12)_4.flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 21h12)_4.flp",
-      "hash": "e146d624d15dad0ab30c3cd68782df8553f207652bf46b038f912bb1f3fd5981"
-    },
-    {
-      "relative_path": "Backup/Project_1 (overwritten at 21h16).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 21h16).flp",
-      "hash": "4dd9d8132d43b054a482a4bfdcb62fab6044f3c88e125df9b03f7716a6ad61ae"
-    },
-    {
-      "relative_path": "Backup/Project_1 (overwritten at 21h23).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 21h23).flp",
-      "hash": "dc6911ba706a87923acd7b6267ea41fd8c4e6a5042da7ace650f6ae3dcdbdf21"
-    },
-    {
-      "relative_path": "Backup/Project_1 (overwritten at 9h02).flp",
-      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\Project_1\\Backup\\Project_1 (overwritten at 9h02).flp",
-      "hash": "d4171c518764916aaf16fe8ea8503d5f32e2b47dedceee405aeb5b108c7c9b2c"
+      "relative_path": "Backup/indie pop rock happy (overwritten at 23h41)_2.flp",
+      "local_path": "C:\\Users\\acer\\Documents\\Image-Line\\FL Studio\\Projects\\indie pop rock happy\\Backup\\indie pop rock happy (overwritten at 23h41)_2.flp",
+      "hash": "d796befc6b70ce396b3dcc9d58894ce117eb89bdf465af4414d30a5bbf8dbe79"
     }
   ]
 }

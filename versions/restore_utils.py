@@ -1,7 +1,7 @@
 """
 versions/restore_utils.py
 Utilities for restoring versions from CAS or snapshots
-Works with file-based manifest storage
+Works with file-based manifest storage and project ID paths
 """
 
 import os
@@ -212,7 +212,7 @@ def create_version_zip_on_demand(version: Version) -> str:
             raise Exception(f"Failed to restore version: {error_msg}")
         
         # Create ZIP
-        zip_name = f"{version.project.name}_v{version.get_version_number()}.zip"
+        zip_name = f"{version.project.name}_v{version.version_number}.zip"
         zip_path = os.path.join(tempfile.gettempdir(), zip_name)
         
         with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zipf:

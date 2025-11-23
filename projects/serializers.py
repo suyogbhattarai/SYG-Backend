@@ -52,7 +52,7 @@ class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = [
-            'id', 'name', 'description', 'owner',
+            'uid', 'name', 'description', 'owner',
             'created_at', 'updated_at',
             'version_count', 'has_active_push', 'latest_version',
             'members', 'user_role',
@@ -71,8 +71,8 @@ class ProjectSerializer(serializers.ModelSerializer):
         latest = obj.get_latest_version()
         if latest:
             return {
-                'id': latest.id,
-                'version_number': latest.get_version_number(),
+                'uid': latest.uid,
+                'version_number': latest.version_number,
                 'commit_message': latest.commit_message,
                 'created_at': latest.created_at,
                 'created_by': latest.created_by.username if latest.created_by else None,
@@ -101,7 +101,7 @@ class ProjectListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = [
-            'id', 'name', 'description', 'owner',
+            'uid', 'name', 'description', 'owner',
             'created_at', 'updated_at',
             'version_count', 'has_active_push', 'user_role',
             'require_push_approval'

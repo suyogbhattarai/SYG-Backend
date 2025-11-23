@@ -1,6 +1,6 @@
 """
 versions/views.py
-FIXED: UID support and secure 404 responses for unauthorized access
+FIXED: UID support, secure 404 responses, and project ID usage
 """
 
 import os
@@ -131,6 +131,7 @@ class ProjectVersionsView(APIView):
         return Response(sanitize_dict({
             'project_uid': project.uid,
             'project_name': project.name,
+            'project_id': project.id,
             'version_count': versions.count(),
             'completed_count': project.versions_new.filter(status='completed').count(),
             'processing_count': project.versions_new.filter(status='processing').count(),
@@ -265,6 +266,7 @@ class VersionUploadView(APIView):
         return Response(sanitize_dict({
             'push_uid': pending_push.uid,
             'project_uid': project.uid,
+            'project_id': project.id,
             'project_name': project.name,
             'version_uid': version.uid,
             'message': 'Push initiated' if initial_status == 'pending' else 'Push awaiting approval',
@@ -556,6 +558,7 @@ class CancelPushView(APIView):
             'push_uid': push.uid
         })
     
+
 class SimpleTestView(APIView):
     authentication_classes = []
     permission_classes = []

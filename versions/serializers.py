@@ -1,24 +1,35 @@
 """
 versions/serializers.py
-FIXED: UUID support and detailed change tracking in responses
+FIXED: UUID support, detailed change tracking, and blob reference info
 """
 
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import Version, PendingPush, FileBlob, DownloadRequest
+from .models import Version, PendingPush, FileBlob, DownloadRequest, BlobReference
 
 
 class FileBlobSerializer(serializers.ModelSerializer):
     """File blob information"""
     size_mb = serializers.SerializerMethodField()
+    reference_count = serializers.SerializerMethodField()
+    referenced_by_projects = serializers.SerializerMethodField()
     
     class Meta:
         model = FileBlob
-        fields = ['id', 'hash', 'size', 'size_mb', 'ref_count', 'created_at']
-        read_only_fields = ['created_at', 'ref_count']
+        fields = ['id', 'hash', 'size', 'size_mb', 'ref_count', 'reference_count', 'referenced_by_projects', 'created_at']
+        read_only_fields = ['created_at', 'ref_count', 'reference_count', 'referenced_by_projects']
     
     def get_size_mb(self, obj):
         return obj.get_size_mb()
+    
+    def get_reference_count(self, obj):
+        """Get actual count of active references"""
+        return obj.get_reference_count()
+    
+    def get_referenced_by_projects(self, obj):
+        """Get list of projects that reference this blob"""
+        refs = BlobReference.objects.filter(blob=obj).distinct('project')
+        return [ref.project.name for ref in refs]
 
 
 class VersionSerializer(serializers.ModelSerializer):
@@ -30,6 +41,7 @@ class VersionSerializer(serializers.ModelSerializer):
     storage_type = serializers.SerializerMethodField()
     project_name = serializers.CharField(source='project.name', read_only=True)
     project_uid = serializers.CharField(source='project.uid', read_only=True)
+    project_id = serializers.IntegerField(source='project.id', read_only=True)
     created_by_username = serializers.CharField(source='created_by.username', read_only=True)
     manifest_summary = serializers.SerializerMethodField()
     is_ready = serializers.SerializerMethodField()
@@ -43,7 +55,7 @@ class VersionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Version
         fields = [
-            'uid', 'id', 'project', 'project_name', 'project_uid',
+            'uid', 'id', 'project', 'project_name', 'project_uid', 'project_id',
             'version_number', 'commit_message',
             'status', 'status_display', 'is_ready',
             'is_snapshot', 'storage_type',
@@ -188,6 +200,7 @@ class DownloadRequestSerializer(serializers.ModelSerializer):
     version_uid = serializers.CharField(source='version.uid', read_only=True)
     project_name = serializers.CharField(source='version.project.name', read_only=True)
     project_uid = serializers.CharField(source='version.project.uid', read_only=True)
+    project_id = serializers.IntegerField(source='version.project.id', read_only=True)
     requested_by_username = serializers.CharField(source='requested_by.username', read_only=True)
     download_url = serializers.SerializerMethodField()
     file_size_mb = serializers.SerializerMethodField()
@@ -201,7 +214,7 @@ class DownloadRequestSerializer(serializers.ModelSerializer):
         model = DownloadRequest
         fields = [
             'uid', 'id', 'version', 'version_uid', 'version_number', 
-            'project_name', 'project_uid',
+            'project_name', 'project_uid', 'project_id',
             'requested_by', 'requested_by_username',
             'status', 'status_display', 'progress', 'message',
             'download_url', 'file_size', 'file_size_mb',
@@ -250,6 +263,7 @@ class PendingPushSerializer(serializers.ModelSerializer):
     uid = serializers.CharField(read_only=True)
     project_name = serializers.CharField(source='project.name', read_only=True)
     project_uid = serializers.CharField(source='project.uid', read_only=True)
+    project_id = serializers.IntegerField(source='project.id', read_only=True)
     created_by_username = serializers.CharField(source='created_by.username', read_only=True)
     approved_by_username = serializers.CharField(source='approved_by.username', read_only=True, allow_null=True)
     is_active = serializers.SerializerMethodField()
@@ -262,7 +276,7 @@ class PendingPushSerializer(serializers.ModelSerializer):
     class Meta:
         model = PendingPush
         fields = [
-            'uid', 'id', 'project', 'project_uid', 'project_name',
+            'uid', 'id', 'project', 'project_uid', 'project_id', 'project_name',
             'commit_message', 'file_list',
             'status', 'progress', 'message', 'error_details',
             'is_active', 'duration',
