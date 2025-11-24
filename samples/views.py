@@ -1,18 +1,12 @@
-# samples/views.py
-"""
-Sample basket management views
-"""
-
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
-from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.shortcuts import get_object_or_404
 
 from projects.models import Project
-from projects.permissions import CanViewProject, CanEditProject
+from projects.permissions import CanViewProject
 from .models import SampleBasket
 from .serializers import (
     SampleBasketSerializer,
@@ -23,14 +17,12 @@ from .serializers import (
 
 
 def sanitize_string(s):
-    """Remove null characters and other problematic characters"""
     if not isinstance(s, str):
         return s
     return ''.join(char for char in s if ord(char) >= 32 or char in '\n\r\t')
 
 
 def sanitize_dict(data):
-    """Recursively sanitize all strings in a dictionary"""
     if isinstance(data, dict):
         return {k: sanitize_dict(v) for k, v in data.items()}
     elif isinstance(data, list):
@@ -41,9 +33,9 @@ def sanitize_dict(data):
         return data
 
 
-# ============================================================================
+# ====================================================================
 # SAMPLE BASKET ENDPOINTS
-# ============================================================================
+# ====================================================================
 
 class SampleBasketView(APIView):
     """Manage project sample basket"""
@@ -51,59 +43,34 @@ class SampleBasketView(APIView):
     permission_classes = [IsAuthenticated, CanViewProject]
     parser_classes = [MultiPartParser, FormParser, JSONParser]
     
-    def get(self, request, project_id):
+    def get(self, request, project_uid):
         """Get all samples for a project"""
-        project = get_object_or_404(Project, id=project_id)
+        project = get_object_or_404(Project, uid=project_uid)
         self.check_object_permissions(request, project)
         
         samples = project.samples_new.all().order_by('-uploaded_at')
-        serializer = SampleBasketListSerializer(
-            samples,
-            many=True,
-            context={'request': request}
-        )
+        serializer = SampleBasketListSerializer(samples, many=True, context={'request': request})
         
         return Response(sanitize_dict({
-            'project_id': project.id,
+            'project_uid': project.uid,
             'project_name': project.name,
             'sample_count': samples.count(),
             'samples': serializer.data
         }))
     
-    def post(self, request, project_id):
+    def post(self, request, project_uid):
         """Upload a new sample to the project"""
-        project = get_object_or_404(Project, id=project_id)
+        project = get_object_or_404(Project, uid=project_uid)
         
-        # Check edit permission
         if not project.user_can_edit(request.user):
-            return Response(
-                {'error': 'You do not have permission to upload samples'},
-                status=status.HTTP_403_FORBIDDEN
-            )
+            return Response({'error': 'You do not have permission to upload samples'},
+                            status=status.HTTP_403_FORBIDDEN)
         
-        serializer = SampleBasketCreateSerializer(
-            data=request.data,
-            context={'request': request}
-        )
-        
+        serializer = SampleBasketCreateSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
-            sample = serializer.save(
-                project=project,
-                uploaded_by=request.user
-            )
-            
-            # Log activity (will implement when activity app is created)
-            # ActivityLog.log(...)
-            
-            response_serializer = SampleBasketSerializer(
-                sample,
-                context={'request': request}
-            )
-            
-            return Response(
-                sanitize_dict(response_serializer.data),
-                status=status.HTTP_201_CREATED
-            )
+            sample = serializer.save(project=project, uploaded_by=request.user)
+            response_serializer = SampleBasketSerializer(sample, context={'request': request})
+            return Response(sanitize_dict(response_serializer.data), status=status.HTTP_201_CREATED)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -111,75 +78,45 @@ class SampleBasketView(APIView):
 class SampleDetailView(APIView):
     """Get, update, or delete a sample"""
     
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated] 
     
-    def get(self, request, sample_id):
-        """Get sample details"""
-        sample = get_object_or_404(SampleBasket, id=sample_id)
-        
-        # Check view permission
+    def get(self, request, sample_uid):
+        sample = get_object_or_404(SampleBasket, uid=sample_uid)
         if not sample.project.user_can_view(request.user):
-            return Response(
-                {'error': 'Access denied'},
-                status=status.HTTP_403_FORBIDDEN
-            )
+            return Response({'error': 'Access denied'}, status=status.HTTP_403_FORBIDDEN)
         
         serializer = SampleBasketSerializer(sample, context={'request': request})
         return Response(sanitize_dict(serializer.data))
     
-    def put(self, request, sample_id):
-        """Update sample metadata"""
-        sample = get_object_or_404(SampleBasket, id=sample_id)
+    def put(self, request, sample_uid):
+        sample = get_object_or_404(SampleBasket, uid=sample_uid)
         project = sample.project
         
-        # Check edit permission
         if not project.user_can_edit(request.user):
-            return Response(
-                {'error': 'You do not have permission to update samples'},
-                status=status.HTTP_403_FORBIDDEN
-            )
+            return Response({'error': 'You do not have permission to update samples'},
+                            status=status.HTTP_403_FORBIDDEN)
         
-        serializer = SampleBasketUpdateSerializer(
-            sample,
-            data=request.data,
-            partial=True,
-            context={'request': request}
-        )
-        
+        serializer = SampleBasketUpdateSerializer(sample, data=request.data, partial=True, context={'request': request})
         if serializer.is_valid():
             serializer.save()
-            
-            response_serializer = SampleBasketSerializer(
-                sample,
-                context={'request': request}
-            )
+            response_serializer = SampleBasketSerializer(sample, context={'request': request})
             return Response(sanitize_dict(response_serializer.data))
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    def patch(self, request, sample_id):
-        """Partial update sample metadata"""
-        return self.put(request, sample_id)
+    def patch(self, request, sample_uid):
+        return self.put(request, sample_uid)
     
-    def delete(self, request, sample_id):
-        """Delete a sample"""
-        sample = get_object_or_404(SampleBasket, id=sample_id)
+    def delete(self, request, sample_uid):
+        sample = get_object_or_404(SampleBasket, uid=sample_uid)
         project = sample.project
         
-        # Only owner or uploader can delete
         if project.owner != request.user and sample.uploaded_by != request.user:
-            return Response(
-                {'error': 'Only project owner or sample uploader can delete'},
-                status=status.HTTP_403_FORBIDDEN
-            )
+            return Response({'error': 'Only project owner or sample uploader can delete'},
+                            status=status.HTTP_403_FORBIDDEN)
         
         sample_name = sample.name
-        
-        # Log activity (will implement when activity app is created)
-        # ActivityLog.log(...)
-        
         sample.delete()
         
-        return Response({
-            'message': f'Sample "{sample_name}" deleted successfully'
-        }, status=status.HTTP_204_NO_CONTENT)
+        return Response({'message': f'Sample "{sample_name}" deleted successfully'},
+                        status=status.HTTP_204_NO_CONTENT)

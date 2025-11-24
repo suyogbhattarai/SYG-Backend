@@ -1,10 +1,5 @@
-# samples/models.py
-"""
-Sample basket models
-Handles sample file uploads and management
-"""
-
 import os
+import uuid
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import pre_delete
@@ -32,8 +27,9 @@ def sample_upload_path(instance, filename):
 class SampleBasket(models.Model):
     """
     Sample files uploaded to project
-    This is a NEW model that will eventually replace versioning.SampleBasket
     """
+    uid = models.CharField(max_length=16, unique=True, db_index=True, editable=False)  # NEW UID field
+
     project = models.ForeignKey(
         Project,
         on_delete=models.CASCADE,
@@ -52,7 +48,7 @@ class SampleBasket(models.Model):
     description = models.TextField(null=True, blank=True)
     tags = models.JSONField(default=list, blank=True)
     uploaded_at = models.DateTimeField(auto_now_add=True)
-    
+
     class Meta:
         ordering = ['-uploaded_at']
         verbose_name = 'Sample (New)'
@@ -60,24 +56,27 @@ class SampleBasket(models.Model):
         db_table = 'samples_samplebasket'
         indexes = [
             models.Index(fields=['project', '-uploaded_at']),
+            models.Index(fields=['uid']),
         ]
-    
+
     def __str__(self):
-        return f"{self.name} - {self.project} (New)"
-    
+        return f"{self.name} - {self.project} (UID:{self.uid[:8]})"
+
     def save(self, *args, **kwargs):
+        if not self.uid:
+            self.uid = uuid.uuid4().hex[:16]  # Generate short UID
         if self.name:
             self.name = sanitize_text(self.name)
         if self.description:
             self.description = sanitize_text(self.description)
-        
+
         # Auto-set file size if not set
         if not self.file_size and self.file:
             try:
                 self.file_size = self.file.size
             except:
                 pass
-        
+
         # Auto-detect file type from extension
         if not self.file_type and self.file:
             try:
@@ -85,18 +84,17 @@ class SampleBasket(models.Model):
                 self.file_type = ext.lower().replace('.', '')
             except:
                 pass
-        
+
         super().save(*args, **kwargs)
-    
+
     def get_file_size_mb(self):
         """Get file size in megabytes"""
         if self.file_size:
             return round(self.file_size / (1024 * 1024), 2)
         return 0
-    
+
     def delete(self, *args, **kwargs):
         """Override delete to remove file from storage"""
-        # Delete the file from storage
         if self.file:
             try:
                 if os.path.isfile(self.file.path):
@@ -104,7 +102,6 @@ class SampleBasket(models.Model):
                     print(f"Deleted sample file: {self.file.path}")
             except Exception as e:
                 print(f"Error deleting sample file: {e}")
-        
         super().delete(*args, **kwargs)
 
 
