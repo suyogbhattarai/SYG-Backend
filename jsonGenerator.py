@@ -70,7 +70,7 @@ if __name__ == "__main__":
     # Generate the JSON
     payload = generate_version_json(
         root_folder=project_folder,
-        project_name="Project_1",
+        project_name="tristan",
         commit_message="Initial version from FL Studio"
     )
     
